@@ -38,23 +38,27 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
       ]}
       components={{
         // 코드 블록 하이라이팅
-        code({ node, inline, className, children, ...props }) {
+        code({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
           const match = /language-(\w+)/.exec(className || '');
-          return !inline && match ? (
-            <SyntaxHighlighter
-              style={theme === 'dark' ? oneDark : oneLight}
-              language={match[1]}
-              PreTag="div"
-              customStyle={{
-                margin: '1.5rem 0',
-                borderRadius: '0.5rem',
-                fontSize: '0.875rem',
-              }}
-              {...props}
-            >
-              {String(children).replace(/\n$/, '')}
-            </SyntaxHighlighter>
-          ) : (
+          if (match) {
+            return (
+              <SyntaxHighlighter
+                style={(theme === 'dark' ? oneDark : oneLight) as any}
+                language={match[1]}
+                PreTag="div"
+                customStyle={{
+                  margin: '1.5rem 0',
+                  borderRadius: '0.5rem',
+                  fontSize: '0.875rem',
+                }}
+                {...props}
+              >
+                {String(children).replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            );
+          }
+
+          return (
             <code
               className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-mono"
               {...props}
@@ -188,7 +192,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         ul({ node, children, ...props }) {
           return (
             <ul
-              className="list-disc list-inside my-4 space-y-2 text-gray-700 dark:text-gray-300"
+              className="list-disc list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
               {...props}
             >
               {children}
@@ -199,13 +203,24 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         ol({ node, children, ...props }) {
           return (
             <ol
-              className="list-decimal list-inside my-4 space-y-2 text-gray-700 dark:text-gray-300"
+              className="list-decimal list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
               {...props}
             >
               {children}
             </ol>
           );
         },
+
+        li({ node, children, ...props }) {
+          return (
+            <li
+              className="ml-2 pl-2 text-gray-700 dark:text-gray-300 leading-relaxed"
+              {...props}
+            >
+              {children}
+            </li>
+          );
+       },
 
         // 이미지 스타일링
         img({ node, src, alt, ...props }) {

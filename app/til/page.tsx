@@ -8,6 +8,11 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { tilPosts } from '@/data/til-posts';
 
+// Sort posts by date descending (latest first)
+const sortedTilPosts = tilPosts.slice().sort((a, b) =>
+  new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
 const POSTS_PER_LOAD = 10;
 
 export default function TILPage() {
@@ -15,8 +20,8 @@ export default function TILPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Get currently displayed posts
-  const currentPosts = tilPosts.slice(0, displayCount);
-  const hasMore = displayCount < tilPosts.length;
+  const currentPosts = sortedTilPosts.slice(0, displayCount);
+  const hasMore = displayCount < sortedTilPosts.length;
 
   // Load more posts
   const loadMore = useCallback(() => {
@@ -24,7 +29,7 @@ export default function TILPage() {
 
     // Simulate loading delay for better UX
     setTimeout(() => {
-      setDisplayCount(prev => Math.min(prev + POSTS_PER_LOAD, tilPosts.length));
+      setDisplayCount(prev => Math.min(prev + POSTS_PER_LOAD, sortedTilPosts.length));
       setIsLoading(false);
     }, 500);
   }, []);
@@ -47,14 +52,14 @@ export default function TILPage() {
               TIL
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Today I Learned - Daily learning notes and quick discoveries
+            
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-500">
-              Showing {currentPosts.length} of {tilPosts.length} posts
+              Showing {currentPosts.length} of {sortedTilPosts.length} posts
             </p>
           </div>
 
-          {tilPosts.length > 0 ? (
+          {sortedTilPosts.length > 0 ? (
             <>
               <div className="space-y-4">
                 {currentPosts.map((post) => (

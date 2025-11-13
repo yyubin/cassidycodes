@@ -8,6 +8,11 @@ import { LoadingSpinner } from '@/components/loading-spinner';
 import { useInfiniteScroll } from '@/hooks/use-infinite-scroll';
 import { articlePosts } from '@/data/article-posts';
 
+// Sort posts by date descending (latest first)
+const sortedArticlePosts = articlePosts.slice().sort((a, b) =>
+  new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
 const POSTS_PER_LOAD = 10;
 
 export default function ArticlesPage() {
@@ -15,8 +20,8 @@ export default function ArticlesPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Get currently displayed posts
-  const currentPosts = articlePosts.slice(0, displayCount);
-  const hasMore = displayCount < articlePosts.length;
+  const currentPosts = sortedArticlePosts.slice(0, displayCount);
+  const hasMore = displayCount < sortedArticlePosts.length;
 
   // Load more posts
   const loadMore = useCallback(() => {
@@ -24,7 +29,7 @@ export default function ArticlesPage() {
 
     // Simulate loading delay for better UX
     setTimeout(() => {
-      setDisplayCount(prev => Math.min(prev + POSTS_PER_LOAD, articlePosts.length));
+      setDisplayCount(prev => Math.min(prev + POSTS_PER_LOAD, sortedArticlePosts.length));
       setIsLoading(false);
     }, 500);
   }, []);
@@ -47,14 +52,14 @@ export default function ArticlesPage() {
               Articles
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              In-depth articles and insights on software development
+              
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-500">
-              Showing {currentPosts.length} of {articlePosts.length} posts
+              Showing {currentPosts.length} of {sortedArticlePosts.length} posts
             </p>
           </div>
 
-          {articlePosts.length > 0 ? (
+          {sortedArticlePosts.length > 0 ? (
             <>
               <div className="space-y-4">
                 {currentPosts.map((post) => (

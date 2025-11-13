@@ -37,7 +37,7 @@ export default function ReflectionsPage() {
               Reflections
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Personal reflections and retrospectives
+            
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-500">
               Total {reflectionPosts.length} posts
