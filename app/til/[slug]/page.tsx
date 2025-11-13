@@ -5,6 +5,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { MarkdownContent } from '@/components/markdown-content';
 import { PostNavigation } from '@/components/post-navigation';
+import { GiscusComments } from '@/components/giscus-comments';
 import { tilPosts } from '@/data/til-posts';
 
 type Props = {
@@ -96,6 +97,9 @@ export default async function TILPostPage({ params }: Props) {
             nextPost={nextPost}
             basePath="/til"
           />
+
+          {/* Comments */}
+          <GiscusComments />
         </article>
       </main>
 

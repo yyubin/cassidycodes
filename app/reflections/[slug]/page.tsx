@@ -5,6 +5,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { MarkdownContent } from '@/components/markdown-content';
 import { PostNavigation } from '@/components/post-navigation';
+import { GiscusComments } from '@/components/giscus-comments';
 import { reflectionPosts } from '@/data/reflection-posts';
 
 type Props = {
@@ -96,6 +97,9 @@ export default async function ReflectionPostPage({ params }: Props) {
             nextPost={nextPost}
             basePath="/reflections"
           />
+
+          {/* Comments */}
+          <GiscusComments />
         </article>
       </main>
 
