@@ -20,9 +20,12 @@ export const metadata: Metadata = {
     template: '%s | cassidycodes',
   },
   description: '개발 블로그 및 포트폴리오 - Articles, TIL, Reflections',
-  keywords: ['개발', '블로그', 'Next.js', 'React', '프론트엔드', 'Spring', 'AOP', 'TIL'],
+  keywords: ['개발', '블로그', '백엔드', '프레임워크', 'POJO', 'server', 'Spring', 'AOP', 'TIL'],
   authors: [{ name: 'yyubin' }],
   creator: 'yyubin',
+  verification: {
+    google: '6iFCG8C5YtndF74RxqC2sLqX6kFl2pRNPC_5i8dASn4',
+  },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
