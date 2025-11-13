@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
@@ -29,9 +30,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           rehypeAutolinkHeadings,
           {
             behavior: 'wrap',
-            properties: {
-              className: ['anchor-link'],
-            },
+            properties: { className: ['anchor-link'] },
           },
         ],
         rehypeKatex,
@@ -40,6 +39,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         // 코드 블록 하이라이팅
         code({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
           const match = /language-(\w+)/.exec(className || '');
+
           if (match) {
             return (
               <SyntaxHighlighter
@@ -68,8 +68,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 링크 스타일링 및 외부 링크 처리
-        a({ node, href, children, ...props }) {
+        a({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
           const isExternal = href?.startsWith('http');
           return (
             <a
@@ -80,15 +79,12 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
               {...props}
             >
               {children}
-              {isExternal && (
-                <span className="ml-1 text-xs">↗</span>
-              )}
+              {isExternal && <span className="ml-1 text-xs">↗</span>}
             </a>
           );
         },
 
-        // 제목에 호버 시 앵커 링크 표시
-        h1({ node, children, ...props }) {
+        h1({ children, ...props }) {
           return (
             <h1
               className="text-3xl md:text-4xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100 group"
@@ -99,7 +95,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        h2({ node, children, ...props }) {
+        h2({ children, ...props }) {
           return (
             <h2
               className="text-2xl md:text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100 group"
@@ -110,7 +106,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        h3({ node, children, ...props }) {
+        h3({ children, ...props }) {
           return (
             <h3
               className="text-xl md:text-2xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100 group"
@@ -121,7 +117,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        h4({ node, children, ...props }) {
+        h4({ children, ...props }) {
           return (
             <h4
               className="text-lg md:text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100"
@@ -132,8 +128,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 인용구 스타일링
-        blockquote({ node, children, ...props }) {
+        blockquote({ children, ...props }) {
           return (
             <blockquote
               className="border-l-4 border-cyan-500 dark:border-cyan-400 pl-4 py-2 my-4 italic text-gray-700 dark:text-gray-300 bg-cyan-50 dark:bg-cyan-950/30 rounded-r"
@@ -144,8 +139,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 테이블 스타일링
-        table({ node, children, ...props }) {
+        table({ children, ...props }) {
           return (
             <div className="overflow-x-auto my-6">
               <table
@@ -158,7 +152,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        thead({ node, children, ...props }) {
+        thead({ children, ...props }) {
           return (
             <thead className="bg-gray-100 dark:bg-gray-800" {...props}>
               {children}
@@ -166,7 +160,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        th({ node, children, ...props }) {
+        th({ children, ...props }) {
           return (
             <th
               className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-700"
@@ -177,7 +171,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        td({ node, children, ...props }) {
+        td({ children, ...props }) {
           return (
             <td
               className="px-4 py-2 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-800"
@@ -188,8 +182,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 리스트 스타일링
-        ul({ node, children, ...props }) {
+        ul({ children, ...props }) {
           return (
             <ul
               className="list-disc list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
@@ -200,7 +193,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        ol({ node, children, ...props }) {
+        ol({ children, ...props }) {
           return (
             <ol
               className="list-decimal list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
@@ -211,7 +204,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        li({ node, children, ...props }) {
+        li({ children, ...props }) {
           return (
             <li
               className="ml-2 pl-2 text-gray-700 dark:text-gray-300 leading-relaxed"
@@ -220,10 +213,9 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
               {children}
             </li>
           );
-       },
+        },
 
-        // 이미지 스타일링
-        img({ node, src, alt, ...props }) {
+        img({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
           return (
             <span className="block my-6">
               <img
@@ -241,18 +233,11 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 수평선
-        hr({ node, ...props }) {
-          return (
-            <hr
-              className="my-8 border-gray-300 dark:border-gray-700"
-              {...props}
-            />
-          );
+        hr(props) {
+          return <hr className="my-8 border-gray-300 dark:border-gray-700" {...props} />;
         },
 
-        // 토글 (details/summary)
-        details({ node, children, ...props }) {
+        details({ children, ...props }) {
           return (
             <details
               className="my-4 p-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50"
@@ -263,7 +248,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        summary({ node, children, ...props }) {
+        summary({ children, ...props }) {
           return (
             <summary
               className="cursor-pointer font-semibold text-gray-900 dark:text-gray-100 hover:text-cyan-600 dark:hover:text-cyan-400 select-none"
@@ -274,8 +259,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 단락
-        p({ node, children, ...props }) {
+        p({ children, ...props }) {
           return (
             <p
               className="my-4 text-gray-700 dark:text-gray-300 leading-relaxed"
@@ -286,19 +270,15 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           );
         },
 
-        // 강조
-        strong({ node, children, ...props }) {
+        strong({ children, ...props }) {
           return (
-            <strong
-              className="font-bold text-gray-900 dark:text-gray-100"
-              {...props}
-            >
+            <strong className="font-bold text-gray-900 dark:text-gray-100" {...props}>
               {children}
             </strong>
           );
         },
 
-        em({ node, children, ...props }) {
+        em({ children, ...props }) {
           return (
             <em className="italic" {...props}>
               {children}
