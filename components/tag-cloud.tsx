@@ -38,7 +38,6 @@ export function TagCloud({ tags, maxTags = 20 }: TagCloudProps) {
   return (
     <div className="w-full max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
-        Tags
       </h2>
 
       <div className="flex flex-wrap gap-3 justify-center items-center">

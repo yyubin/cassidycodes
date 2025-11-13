@@ -23,26 +23,20 @@ export function getAllTags(): TagWithCount[] {
 }
 
 export function getPostsByTag(tag: string) {
-  const allPosts = [...tilPosts, ...articlePosts, ...reflectionPosts];
+  // 각 포스트에 타입을 먼저 태깅
+  const taggedTilPosts = tilPosts.map(post => ({ ...post, type: 'til' as const }));
+  const taggedArticlePosts = articlePosts.map(post => ({ ...post, type: 'article' as const }));
+  const taggedReflectionPosts = reflectionPosts.map(post => ({ ...post, type: 'reflection' as const }));
+
+  const allPosts = [...taggedTilPosts, ...taggedArticlePosts, ...taggedReflectionPosts];
 
   return allPosts
     .filter(post => post.tags.includes(tag))
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .map(post => {
-      // 포스트 타입 판별
-      let type: 'til' | 'article' | 'reflection' = 'til';
-      if (articlePosts.find(p => p.id === post.id)) {
-        type = 'article';
-      } else if (reflectionPosts.find(p => p.id === post.id)) {
-        type = 'reflection';
-      }
-
-      return {
-        ...post,
-        type,
-        href: `/${type === 'article' ? 'articles' : type === 'reflection' ? 'reflections' : 'til'}/${post.slug}`,
-      };
-    });
+    .map(post => ({
+      ...post,
+      href: `/${post.type === 'article' ? 'articles' : post.type === 'reflection' ? 'reflections' : 'til'}/${post.slug}`,
+    }));
 }
 
 export function searchPosts(query: string) {
@@ -50,7 +44,12 @@ export function searchPosts(query: string) {
     return [];
   }
 
-  const allPosts = [...tilPosts, ...articlePosts, ...reflectionPosts];
+  // 각 포스트에 타입을 먼저 태깅
+  const taggedTilPosts = tilPosts.map(post => ({ ...post, type: 'til' as const }));
+  const taggedArticlePosts = articlePosts.map(post => ({ ...post, type: 'article' as const }));
+  const taggedReflectionPosts = reflectionPosts.map(post => ({ ...post, type: 'reflection' as const }));
+
+  const allPosts = [...taggedTilPosts, ...taggedArticlePosts, ...taggedReflectionPosts];
   const lowerQuery = query.toLowerCase();
 
   return allPosts
@@ -62,19 +61,8 @@ export function searchPosts(query: string) {
       return matchTitle || matchSubtitle || matchTags;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .map(post => {
-      // 포스트 타입 판별
-      let type: 'til' | 'article' | 'reflection' = 'til';
-      if (articlePosts.find(p => p.id === post.id)) {
-        type = 'article';
-      } else if (reflectionPosts.find(p => p.id === post.id)) {
-        type = 'reflection';
-      }
-
-      return {
-        ...post,
-        type,
-        href: `/${type === 'article' ? 'articles' : type === 'reflection' ? 'reflections' : 'til'}/${post.slug}`,
-      };
-    });
+    .map(post => ({
+      ...post,
+      href: `/${post.type === 'article' ? 'articles' : post.type === 'reflection' ? 'reflections' : 'til'}/${post.slug}`,
+    }));
 }
