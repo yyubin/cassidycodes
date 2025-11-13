@@ -184,10 +184,12 @@ private Optional<AttributeDescriptor> selectAttributeDescriptor(
 private String newColumn;
 ```
 
-이를 통해 다음과 같은 무중단 마이그레이션이 가능해진다:
+이를 통해 다음과 같은 무중단 마이그레이션이 가능해진다.
 
-**Phase 1**: 새 컬럼 추가 + 데이터 백필
+**Phase 1**: 새 컬럼 추가 + 데이터 백필. 
+
 **Phase 2**: 애플리케이션 코드 전환  
+
 **Phase 3**: 구 컬럼 제거
 
 각 Phase는 별도의 배포 주기에 실행되어, **진정한 무중단 배포**를 지원할 수 있다면, 나쁘지 않을 것 같다.
