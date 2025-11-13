@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import type { Metadata } from 'next';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { MarkdownContent } from '@/components/markdown-content';
@@ -16,6 +17,36 @@ export async function generateStaticParams() {
   return tilPosts.map((post) => ({
     slug: post.slug,
   }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = tilPosts.find((p) => p.slug === slug);
+
+  if (!post) {
+    return {
+      title: 'Not Found',
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.subtitle,
+    keywords: post.tags,
+    openGraph: {
+      title: post.title,
+      description: post.subtitle,
+      type: 'article',
+      publishedTime: post.date,
+      tags: post.tags,
+      url: `/til/${post.slug}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.subtitle,
+    },
+  };
 }
 
 export default async function TILPostPage({ params }: Props) {
