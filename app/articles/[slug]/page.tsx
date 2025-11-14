@@ -4,7 +4,7 @@ import { join } from 'path';
 import type { Metadata } from 'next';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { MarkdownContent } from '@/components/markdown-content';
+import { MarkdownContentWithTOC } from '@/components/markdown-content-with-toc';
 import { PostNavigation } from '@/components/post-navigation';
 import { GiscusComments } from '@/components/giscus-comments';
 import { articlePosts } from '@/data/article-posts';
@@ -76,7 +76,7 @@ export default async function ArticlePostPage({ params }: Props) {
     <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors">
       <Header />
 
-      <main className="max-w-3xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-6 py-16">
         <article className="space-y-8">
           {/* Header */}
           <header className="space-y-4 border-b border-gray-200 dark:border-gray-800 pb-8">
@@ -119,7 +119,7 @@ export default async function ArticlePostPage({ params }: Props) {
 
           {/* Markdown Content */}
           <div className="max-w-none">
-            <MarkdownContent content={content} />
+            <MarkdownContentWithTOC content={content} />
           </div>
 
           {/* Post Navigation */}
