@@ -25,7 +25,7 @@ export default function Home() {
                 cassidycodes
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                GPT, 구글보다 스스로에게 먼저 묻자
+                
               </p>
             </div>
 
