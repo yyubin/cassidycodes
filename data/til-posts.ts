@@ -9,5 +9,14 @@ export const tilPosts: TILPost[] = [
         tags: ['Rust', 'Ownership', 'SmartPointers', 'Lifetime', 'RcArc'],
         slug: "memory-management-wonership-in-rust",
         contentPath: '/content/til/memory-management-wonership-in-rust.md'
+    },
+    {
+        id: "2",
+        title: "Go의 netpollor 소스코드 뜯어보기",
+        subtitle: "Go가 tail latency에서 압도적으로 좋은 이유",
+        date: "2025-11-18T23:48:00",
+        tags: ['Go', 'Goroutine', 'netpollor'],
+        slug: "go-netpollor",
+        contentPath: '/content/til/go-netpoller.md'
     }
 ];
