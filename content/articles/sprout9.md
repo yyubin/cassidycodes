@@ -602,72 +602,146 @@ public class ServiceB {
 
 Sprout은 스프링과 달리 순환 의존성을 해결하려 하지 않고, **빈 생성 전에 감지**하여 명확한 에러를 발생시킨다.
 
+#### Kahn's Algorithm을 사용한 위상 정렬
+
+Sprout은 **Kahn's Algorithm**을 사용하여 위상 정렬을 수행한다. 이는 BFS 기반의 알고리즘으로, 진입 차수(indegree)를 활용한다.
+
 ```java
 public class BeanGraph {
-    private final Map<String, List<String>> dependencyGraph = new HashMap<>();
-    private List<String> orderedBeanNames;
-    
-    public void build(Collection<BeanDefinition> beanDefinitions) {
-        // 1. 의존성 그래프 구축
-        for (BeanDefinition def : beanDefinitions) {
-            String beanName = def.getName();
-            List<String> dependencies = extractDependencies(def);
-            dependencyGraph.put(beanName, dependencies);
-        }
-        
-        // 2. 위상 정렬 시도
-        try {
-            orderedBeanNames = topologicalSort();
-        } catch (CircularDependencyException e) {
-            // 순환 의존성 발견!
-            throw new BeanCreationException(
-                "Circular dependency detected: " + e.getCycle()
-            );
-        }
+    private final Map<String, BeanDefinition> nodeMap = new HashMap<>();
+    private final Map<String, List<String>> edges = new HashMap<>();
+    private final Map<String, Integer> indegree = new HashMap<>();
+
+    public BeanGraph(Collection<BeanDefinition> definitions) {
+        // 1. 노드 초기화
+        definitions.forEach(d -> {
+            nodeMap.put(d.getName(), d);
+            indegree.putIfAbsent(d.getName(), 0);
+        });
+
+        // 2. 의존성 그래프 구축
+        buildEdges();
     }
-    
-    private List<String> topologicalSort() {
-        List<String> result = new ArrayList<>();
-        Set<String> visited = new HashSet<>();
-        Set<String> visiting = new HashSet<>();  // 현재 방문 중인 노드
-        
-        for (String beanName : dependencyGraph.keySet()) {
-            if (!visited.contains(beanName)) {
-                dfs(beanName, visited, visiting, result);
+
+    public List<BeanDefinition> topologicallySorted() {
+        // 1. indegree가 0인 빈들을 큐에 추가 (의존성 없는 빈)
+        Deque<String> q = new ArrayDeque<>();
+        indegree.forEach((beanName, deg) -> {
+            if (deg == 0) q.add(beanName);
+        });
+
+        List<BeanDefinition> ordered = new ArrayList<>(nodeMap.size());
+
+        // 2. BFS 수행
+        while (!q.isEmpty()) {
+            String curBeanName = q.poll();
+            ordered.add(nodeMap.get(curBeanName));
+
+            // 현재 빈에 의존하는 빈들의 indegree 감소
+            for (String nextBeanName : edges.getOrDefault(curBeanName, Collections.emptyList())) {
+                int d = indegree.merge(nextBeanName, -1, Integer::sum);
+                if (d == 0) q.add(nextBeanName);  // indegree가 0이 되면 큐에 추가
             }
         }
-        
-        Collections.reverse(result);
-        return result;
-    }
-    
-    private void dfs(String beanName, Set<String> visited, 
-                     Set<String> visiting, List<String> result) {
-        if (visiting.contains(beanName)) {
-            // 순환 의존성 발견!
+
+        // 3. 순환 의존성 검사
+        if (ordered.size() != nodeMap.size()) {
             throw new CircularDependencyException(
-                "Circular dependency: " + beanName
+                "Circular dependency detected among application beans"
             );
         }
-        
-        if (visited.contains(beanName)) {
-            return;
-        }
-        
-        visiting.add(beanName);
-        
-        List<String> dependencies = dependencyGraph.get(beanName);
-        if (dependencies != null) {
-            for (String dep : dependencies) {
-                dfs(dep, visited, visiting, result);
+
+        return ordered;
+    }
+
+    private void buildEdges() {
+        for (BeanDefinition def : nodeMap.values()) {
+            // 생성 방식에 따라 의존성 추출
+            Class<?>[] dependencyTypes = extractDependencyTypes(def);
+
+            if (dependencyTypes == null || dependencyTypes.length == 0) {
+                continue;
+            }
+
+            // 각 의존성에 대해 실제 빈 찾기
+            for (Class<?> depType : dependencyTypes) {
+                if (List.class.isAssignableFrom(depType)) {
+                    continue;  // 리스트 주입은 나중에 처리
+                }
+
+                // 타입에 맞는 빈 이름 찾기
+                Set<String> candidateBeanNames = getBeanNamesForType(depType);
+
+                if (candidateBeanNames.size() == 1) {
+                    String dependencyBeanName = candidateBeanNames.iterator().next();
+
+                    // 엣지 추가: A가 B에 의존하면 A -> B
+                    edges.computeIfAbsent(dependencyBeanName, k -> new ArrayList<>())
+                         .add(def.getName());
+
+                    // B의 indegree 증가
+                    indegree.merge(def.getName(), 1, Integer::sum);
+
+                } else if (candidateBeanNames.size() > 1) {
+                    throw new RuntimeException(
+                        "Ambiguous dependency for type '" + depType.getName() +
+                        "' required by bean '" + def.getName() + "'"
+                    );
+                }
             }
         }
-        
-        visiting.remove(beanName);
-        visited.add(beanName);
-        result.add(beanName);
     }
 }
+```
+
+#### 위상 정렬 동작 과정
+
+```java
+// 예시: A -> B -> C 의존성 (A는 B를 의존, B는 C를 의존)
+
+// 1. 초기 상태
+indegree: {A=0, B=1, C=1}
+edges: {A=[B], B=[C]}
+
+// 2. indegree가 0인 A를 큐에 추가
+queue: [A]
+
+// 3. A 처리 → B의 indegree 감소
+ordered: [A]
+indegree: {A=0, B=0, C=1}
+queue: [B]
+
+// 4. B 처리 → C의 indegree 감소
+ordered: [A, B]
+indegree: {A=0, B=0, C=0}
+queue: [C]
+
+// 5. C 처리
+ordered: [A, B, C]
+queue: []
+
+// 결과: A, B, C 순서로 생성
+```
+
+#### 순환 의존성 감지
+
+위상 정렬이 완료된 후, 정렬된 빈의 개수가 전체 빈 개수와 다르면 순환 의존성이 존재한다.
+
+```java
+// 순환 의존성 예시: A -> B -> A
+
+// 초기 상태
+indegree: {A=1, B=1}  // 모두 1 이상
+edges: {A=[B], B=[A]}
+
+// indegree가 0인 노드가 없음!
+queue: []
+
+// 결과
+ordered: []  // 크기가 0
+nodeMap.size(): 2
+
+// ordered.size() != nodeMap.size() → CircularDependencyException 발생
 ```
 
 ### 순환 의존성 에러 메시지

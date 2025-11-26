@@ -8,6 +8,7 @@ const menuItems = [
   { name: 'TIL', href: '/til' },
   { name: 'Articles', href: '/articles' },
   { name: 'Reflections', href: '/reflections' },
+  { name: 'Projects', href: '/projects' },
   { name: 'Misc', href: '/misc' },
 ];
 
