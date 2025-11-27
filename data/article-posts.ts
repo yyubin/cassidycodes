@@ -117,5 +117,14 @@ export const articlePosts: Article[] = [
         tags: ['spring', 'sprout', 'JMC', 'JITWatch', 'server', 'JVM', 'JIT'],
         slug: 'sprout13',
         contentPath: '/content/articles/sprout13.md'
+    },
+    {
+        id: "14",
+        title: "WebSocket을 직접 구현하면서 배운 것들: NIO부터 프레임 파싱까지",
+        subtitle: "라이브러리 없이 WebSocket을 구현하며 만난 문제들과 해결 과정 기록",
+        date: "2025-11-28T00:13:00",
+        tags: ['spring', 'sprout', 'WebSocket', 'NIO', 'RFC 6455'],
+        slug: 'sprout-websocket',
+        contentPath: '/content/articles/sprout-websocket.md'
     }
 ];
