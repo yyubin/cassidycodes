@@ -8,6 +8,7 @@ export type Project = {
   techStack: string[];
   relatedArticles: {
     title: string;
+    section: string;
     slug: string;
   }[];
   githubUrl: string;

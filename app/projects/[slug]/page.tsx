@@ -213,7 +213,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                 {project.relatedArticles.map((article) => (
                   <Link
                     key={article.slug}
-                    href={`/articles/${article.slug}`}
+                    href={`/${article.section}/${article.slug}`}
                     className="block p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-cyan-400 dark:hover:border-cyan-600 transition-colors group"
                   >
                     <div className="flex items-center justify-between gap-4">
