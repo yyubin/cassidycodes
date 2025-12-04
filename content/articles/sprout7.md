@@ -513,7 +513,14 @@ public class LatencySimulation extends Simulation {
 ## Hybrid + PlatformThread
 스레드 풀 사이즈는 150으로 두었다. 
 
-!youtube[I4-Qp4nxoMc?si=Kzyueqp1kQBDmPZM]
+  <iframe 
+    width="560" 
+    height="315" 
+    src="https://www.youtube.com/watch?v=I4-Qp4nxoMc" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen
+  ></iframe>
 
 좀 과하긴 한데, 실제 구동 및 테스트 과정에 대한 짧은 영상도 첨부했다. 걍 한번도 안보여준 거 같아서..
 
