@@ -124,8 +124,8 @@ export default async function ArticlePostPage({ params }: Props) {
 
           {/* Post Navigation */}
           <PostNavigation
-            prevPost={prevPost}
-            nextPost={nextPost}
+            prevPost={nextPost}
+            nextPost={prevPost}
             basePath="/articles"
           />
 
