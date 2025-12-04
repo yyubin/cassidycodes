@@ -36,5 +36,14 @@ export const tilPosts: TILPost[] = [
         tags: ['Go', 'Goroutine', 'netpollor'],
         slug: "go-netpollor",
         contentPath: '/content/til/go-netpoller.md'
-    }
+    },
+    {
+        id: "4",
+        title: "Jinx Gradle Plugin 배포 작업 일지",
+        subtitle: "Jinx Gradle Plugin을 Gradle Plugin Portal에 게시하기",
+        date: "2025-12-04T18:45:00",
+        tags: ['Gradle', 'plugin', 'jinx'],
+        slug: "jinx-gradle-plugin-publish",
+        contentPath: '/content/til/jinx-gradle-plugin-publish.md'
+    }    
 ];
