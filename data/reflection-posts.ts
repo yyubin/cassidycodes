@@ -10,4 +10,13 @@ export const reflectionPosts: Reflection[] = [
         slug: 'jinx',
         contentPath: '/content/reflections/jinx.md'
     },
+    {
+        id: "2",
+        title: "Jinx - ColumnDiffer 리팩토링 회고",
+        subtitle: "정확성과 안전성을 최우선으로...",
+        date: "2025-12-15T22:44:00",
+        tags: ['jinx', 'schema matching', 'rename'],
+        slug: "jinx-dispose-rename",
+        contentPath: '/content/reflections/jinx-dispose-rename.md'
+    }    
 ];

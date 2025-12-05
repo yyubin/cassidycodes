@@ -124,8 +124,8 @@ export default async function ReflectionPostPage({ params }: Props) {
 
           {/* Post Navigation */}
           <PostNavigation
-            prevPost={prevPost}
-            nextPost={nextPost}
+            prevPost={nextPost}
+            nextPost={prevPost}
             basePath="/reflections"
           />
 

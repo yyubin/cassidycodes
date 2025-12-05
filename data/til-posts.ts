@@ -63,5 +63,5 @@ export const tilPosts: TILPost[] = [
         tags: ['JDK', 'OpenJDK', 'JVM'],
         slug: "open-jdk-build",
         contentPath: '/content/til/open-jdk-build.md'
-    },      
+    }, 
 ];
