@@ -45,5 +45,23 @@ export const tilPosts: TILPost[] = [
         tags: ['Gradle', 'plugin', 'jinx'],
         slug: "jinx-gradle-plugin-publish",
         contentPath: '/content/til/jinx-gradle-plugin-publish.md'
-    }    
+    },
+    {
+        id: "5",
+        title: "JVM 컴파일 패러다임의 진화: JIT, AOT, GraalVM, Leyden까지",
+        subtitle: "클라우드 네이티브 시대가 자바 컴파일러를 다시 설계하게 된 이유",
+        date: "2025-08-12T16:28:00",
+        tags: ['JVM', 'JIT', 'GraalVM', 'compiler', 'JAVA'],
+        slug: "java-compiler-jit-aot-graal",
+        contentPath: '/content/til/java-compiler-jit-aot-graal.md'
+    },    
+    {
+        id: "6",
+        title: "OpenJDK 소스 직접 빌드해보기",
+        subtitle: "OpenJDK 소스 구조 분석 및 컴파일 과정에서 마주친 빌드 이슈와 JVM 내부 모듈의 역할 정리",
+        date: "2025-08-12T16:28:00",
+        tags: ['JDK', 'OpenJDK', 'JVM'],
+        slug: "open-jdk-build",
+        contentPath: '/content/til/open-jdk-build.md'
+    },      
 ];
