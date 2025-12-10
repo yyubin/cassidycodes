@@ -64,4 +64,13 @@ export const tilPosts: TILPost[] = [
         slug: "open-jdk-build",
         contentPath: '/content/til/open-jdk-build.md'
     }, 
+    {
+        id: "7",
+        title: "Jinx Gradle Plugin approved",
+        subtitle: "Gradle Plugin Publish 할 때 권고사항",
+        date: "2025-12-10T21:24:00",
+        tags: ['Gradle', 'plugin', 'jinx'],
+        slug: "gradle-plugin-approved",
+        contentPath: '/content/til/gradle-plugin-approved.md'
+    },    
 ];
