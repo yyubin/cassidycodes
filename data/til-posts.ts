@@ -73,4 +73,13 @@ export const tilPosts: TILPost[] = [
         slug: "gradle-plugin-approved",
         contentPath: '/content/til/gradle-plugin-approved.md'
     },    
+    {
+        id: "8",
+        title: "Spring Kafka Deprecated API 정리",
+        subtitle: "Spring 4+ 에서의 kafka 설정 트러블슈팅",
+        date: "2025-12-12T01:54:00",
+        tags: ['spring', 'kafka'],
+        slug: "spring-kafka-deprecated-api",
+        contentPath: '/content/til/spring-kafka-deprecated-api.md'
+    },      
 ];
