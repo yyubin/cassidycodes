@@ -82,4 +82,13 @@ export const tilPosts: TILPost[] = [
         slug: "spring-kafka-deprecated-api",
         contentPath: '/content/til/spring-kafka-deprecated-api.md'
     },      
+    {
+        id: "9",
+        title: "Jinx SQL 생성 순서 트러블슈팅",
+        subtitle: "리네임은 없지만, 리네임 문제이긴 합니다.",
+        date: "2026-01-11T07:01:00",
+        tags: ['jinx', '트러블슈팅'],
+        slug: "jinx-troubleshooting-sql-generation-order",
+        contentPath: '/content/til/jinx-troubleshooting-sql-generation-order.md'
+    },      
 ];
