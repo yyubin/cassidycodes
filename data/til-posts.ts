@@ -90,5 +90,14 @@ export const tilPosts: TILPost[] = [
         tags: ['jinx', '트러블슈팅'],
         slug: "jinx-troubleshooting-sql-generation-order",
         contentPath: '/content/til/jinx-troubleshooting-sql-generation-order.md'
-    },      
+    },  
+    {
+        id: "10",
+        title: "완벽하지 않은 추천 시스템을 만들며 배운 것들",
+        subtitle: "BookVoyage 개인 프로젝트 추천모듈 설계와 한계 정리",
+        date: "2026-01-12T08:43:00",
+        tags: ['bookvoyage', '추천시스템', 'Neo4j', 'Elasticsearch'],
+        slug: "bookvoyage-recommendation-system-v1",
+        contentPath: '/content/til/bookvoyage-recommendation-system-v1.md'
+    },              
 ];
