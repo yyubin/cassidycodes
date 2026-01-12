@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
+import { useTheme } from 'next-themes';
 
 interface MermaidDiagramProps {
   chart: string;
@@ -12,17 +13,16 @@ let mermaidInitialized = false;
 export function MermaidDiagram({ chart }: MermaidDiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>('');
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
-    if (!mermaidInitialized) {
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: 'default',
-        securityLevel: 'loose',
-        fontFamily: 'inherit',
-      });
-      mermaidInitialized = true;
-    }
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: resolvedTheme === 'dark' ? 'dark' : 'default',
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+    });
+    mermaidInitialized = true;
 
     const renderDiagram = async () => {
       try {
@@ -35,7 +35,7 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
     };
 
     renderDiagram();
-  }, [chart]);
+  }, [chart, resolvedTheme]);
 
   return (
     <div className="mermaid-container overflow-x-auto">

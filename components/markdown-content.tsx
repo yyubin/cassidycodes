@@ -11,6 +11,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark, oneLight } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useTheme } from 'next-themes';
+import { MermaidDiagram } from './mermaid-diagram';
 import 'katex/dist/katex.min.css';
 
 interface MarkdownContentProps {
@@ -37,10 +38,17 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
       ]}
       components={{
         // 코드 블록 하이라이팅
-        code({ className, children, ...props }: React.HTMLAttributes<HTMLElement>) {
+        code({
+          className,
+          children,
+          ...props
+        }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) {
           const match = /language-(\w+)/.exec(className || '');
 
           if (match) {
+            if (match[1] === 'mermaid') {
+              return <MermaidDiagram chart={String(children).replace(/\n$/, '')} />;
+            }
             return (
               <SyntaxHighlighter
                 style={(theme === 'dark' ? oneDark : oneLight) as any}
