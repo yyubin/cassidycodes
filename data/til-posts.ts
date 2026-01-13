@@ -99,5 +99,14 @@ export const tilPosts: TILPost[] = [
         tags: ['bookvoyage', '추천시스템', 'Neo4j', 'Elasticsearch'],
         slug: "bookvoyage-recommendation-system-v1",
         contentPath: '/content/til/bookvoyage-recommendation-system-v1.md'
-    },              
+    },    
+    {
+        id: "11",
+        title: "neo4j 웨비나 후기: The Power of Knowledge Graphs for GenAI",
+        subtitle: "neo4j 웨비나와 개인 프로젝트 경험을 통해 정리한 생각",
+        date: "2026-01-13T14:11:00",
+        tags: ['neo4j', 'AI', 'DB'],
+        slug: "neo4j-webinar-review-genai",
+        contentPath: "/content/til/neo4j-webinar-review-genai.md"
+    }          
 ];
