@@ -8,7 +8,6 @@ const menuItems = [
   { name: 'TIL', href: '/til' },
   { name: 'Articles', href: '/articles' },
   { name: 'Reflections', href: '/reflections' },
-  { name: 'Misc', href: '/misc' },
 ];
 
 export function Navigation() {
