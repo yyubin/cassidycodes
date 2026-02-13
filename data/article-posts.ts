@@ -126,5 +126,14 @@ export const articlePosts: Article[] = [
         tags: ['spring', 'sprout', 'WebSocket', 'NIO', 'RFC 6455'],
         slug: 'sprout-websocket',
         contentPath: '/content/articles/sprout-websocket.md'
+    },
+    {
+        id: "15",
+        title: "Java Annotation Processing Tool 실전 구현기",
+        subtitle: "Jinx 라이브러리 개발 과정에서 겪은 문제와 해결 전략",
+        date: "2026-02-13T18:09:30",
+        tags: ['jinx', 'apt'],
+        slug: 'precautions-for-handling-java-apt',
+        contentPath: '/content/articles/precautions-for-handling-java-apt.md'
     }
 ];
