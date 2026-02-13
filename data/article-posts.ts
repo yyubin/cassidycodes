@@ -131,9 +131,18 @@ export const articlePosts: Article[] = [
         id: "15",
         title: "Java Annotation Processing Tool 실전 구현기",
         subtitle: "Jinx 라이브러리 개발 과정에서 겪은 문제와 해결 전략",
-        date: "2026-02-13T18:09:30",
+        date: "2026-02-13T15:09:30",
         tags: ['jinx', 'apt'],
         slug: 'precautions-for-handling-java-apt',
         contentPath: '/content/articles/precautions-for-handling-java-apt.md'
-    }
+    },
+    {
+        id: "16",
+        title: "p99 60초에서 106ms로(Bookvoyage)",
+        subtitle: "HikariCP 병목 제거와 리소스 격리를 통한 장애 해소 사례",
+        date: "2026-02-13T18:29:01",
+        tags: ['bookvoyage', 'gatling', 'latency'],
+        slug: 'bookvoyage-performance-improvement-report',
+        contentPath: '/content/articles/bookvoyage-performance-improvement-report.md'
+    }    
 ];
