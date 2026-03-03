@@ -144,5 +144,14 @@ export const articlePosts: Article[] = [
         tags: ['bookvoyage', 'gatling', 'latency'],
         slug: 'bookvoyage-performance-improvement-report',
         contentPath: '/content/articles/bookvoyage-performance-improvement-report.md'
-    }    
+    },
+    {
+        id: "17",
+        title: "Hotpath 내부 구조 — 수집/분석/렌더링 전 과정",
+        subtitle: "jfr을 가벼운 분석 리포트로 변환하는 도구 개발",
+        date: "2026-03-13T18:59:24",
+        tags: ['hotpath', 'jfr', 'jvm', 'latency'],
+        slug: 'hotpath-internals',
+        contentPath: '/content/articles/hotpath-internals.md'
+    }        
 ];
