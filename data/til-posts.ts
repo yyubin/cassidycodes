@@ -108,5 +108,14 @@ export const tilPosts: TILPost[] = [
         tags: ['neo4j', 'AI', 'DB'],
         slug: "neo4j-webinar-review-genai",
         contentPath: "/content/til/neo4j-webinar-review-genai.md"
-    }          
+    },   
+    {
+        id: "12",
+        title: "정신은 없지만 Tokio 정리는 하고 싶어서 쓰는 Rust Async 핵심 요약",
+        subtitle: "정신은 없지만 재미는 있음",
+        date: "2026-03-11T03:57:11",
+        tags: ['Rust', 'Tokio', 'Async', 'Future'],
+        slug: "rust-future-tokio",
+        contentPath: "/content/til/rust-future-tokio.md"
+    }            
 ];
