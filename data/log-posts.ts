@@ -1,6 +1,6 @@
 import { LogPost } from "@/types/log";
 
-export const logPosts = [
+export const logPosts: LogPost[] = [
     {
         id: "0",
         title: "Git 핵심 명령어 강의록",
@@ -18,5 +18,14 @@ export const logPosts = [
         tags: ['html', 'css'],
         slug: "html-css-basic-notes",
         contentPath: '/content/logs/html-css-basic-notes.md'
-    },      
+    },  
+    {
+        id: "2",
+        title: "JavaScript 입문 강의록",
+        subtitle: "",
+        date: "2026-04-08T16:41:00",
+        tags: ['js'],
+        slug: "js-basic-notes",
+        contentPath: '/content/logs/js-basic-notes.md'
+    },              
 ]
