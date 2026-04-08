@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       publishedTime: post.date,
       tags: post.tags,
-      url: `/til/${post.slug}`,
+      url: `/logs/${post.slug}`,
     },
     twitter: {
       card: 'summary_large_image',
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function TILPostPage({ params }: Props) {
+export default async function LogsPostPage({ params }: Props) {
   const { slug } = await params;
 
   // Sort posts by date (newest first)
@@ -126,7 +126,7 @@ export default async function TILPostPage({ params }: Props) {
           <PostNavigation
             prevPost={nextPost}
             nextPost={prevPost}
-            basePath="/til"
+            basePath="/logs"
           />
 
           {/* Comments */}
