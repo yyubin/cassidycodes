@@ -36,5 +36,14 @@ export const logPosts: LogPost[] = [
         tags: ['js'],
         slug: "js-basic-notes-2",
         contentPath: '/content/logs/js-basic-notes-2.md'
-    },              
+    },    
+    {
+        id: "4",
+        title: "JavaScript 강의록 — 생성자 함수, 프로토타입, 배열, 표준 내장 객체",
+        subtitle: "",
+        date: "2026-04-10T17:02:00",
+        tags: ['js'],
+        slug: "js-basic-notes-3",
+        contentPath: '/content/logs/js-basic-notes-3.md'
+    },                   
 ]
