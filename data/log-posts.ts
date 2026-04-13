@@ -45,5 +45,14 @@ export const logPosts: LogPost[] = [
         tags: ['js'],
         slug: "js-basic-notes-3",
         contentPath: '/content/logs/js-basic-notes-3.md'
-    },                   
+    },
+    {
+        id: "5",
+        title: "ES6+ 강의록 — 클래스, 화살표 함수, 이터러블, rest, spread, 구조분해할당",
+        subtitle: "문풀 해설 포함",
+        date: "2026-04-13T16:55:00",
+        tags: ['js', 'es6'],
+        slug: "js-basic-notes-4",
+        contentPath: '/content/logs/js-basic-notes-4.md'
+    },                       
 ]
