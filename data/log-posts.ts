@@ -65,4 +65,13 @@ export const logPosts: LogPost[] = [
     slug: "js-basic-notes-5",
     contentPath: "/content/logs/js-basic-notes-5.md",
   },
+  {
+    id: "7",
+    title: "JavaScript 강의록 — 이벤트 / BOM / 비동기",
+    subtitle: "",
+    date: "2026-04-15T17:45:00",
+    tags: ["js", "event"],
+    slug: "js-basic-notes-6",
+    contentPath: "/content/logs/js-basic-notes-6.md",
+  },
 ];
