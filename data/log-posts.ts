@@ -74,4 +74,13 @@ export const logPosts: LogPost[] = [
     slug: "js-basic-notes-6",
     contentPath: "/content/logs/js-basic-notes-6.md",
   },
+  {
+    id: "8",
+    title: "⚛️React 기초 강의록",
+    subtitle: "",
+    date: "2026-04-16T16:45:00",
+    tags: ["js", "react"],
+    slug: "react-basic-notes-1",
+    contentPath: "/content/logs/react-basic-notes-1.md",
+  },
 ];
