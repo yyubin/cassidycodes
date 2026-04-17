@@ -77,10 +77,19 @@ export const logPosts: LogPost[] = [
   {
     id: "8",
     title: "⚛️React 기초 강의록",
-    subtitle: "",
+    subtitle: "render/JSX/VirtualDOM/컴포넌트/Props/useState/event",
     date: "2026-04-16T16:45:00",
     tags: ["js", "react"],
     slug: "react-basic-notes-1",
     contentPath: "/content/logs/react-basic-notes-1.md",
+  },
+  {
+    id: "9",
+    title: "⚛️React 기초 강의록 — 리스트 렌더링 & useEffect",
+    subtitle: "",
+    date: "2026-04-17T16:10:00",
+    tags: ["js", "react"],
+    slug: "react-basic-notes-2",
+    contentPath: "/content/logs/react-basic-notes-2.md",
   },
 ];
