@@ -93,7 +93,7 @@ export const logPosts: LogPost[] = [
     contentPath: "/content/logs/react-basic-notes-2.md",
   },
   {
-    id: "9",
+    id: "10",
     title: "⚛️React 심화 & 비동기 처리",
     subtitle: "useCallback, useRef, custom hook, promise, async-await",
     date: "2026-04-20T17:19:00",
