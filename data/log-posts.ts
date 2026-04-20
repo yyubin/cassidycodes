@@ -92,4 +92,13 @@ export const logPosts: LogPost[] = [
     slug: "react-basic-notes-2",
     contentPath: "/content/logs/react-basic-notes-2.md",
   },
+  {
+    id: "9",
+    title: "⚛️React 심화 & 비동기 처리",
+    subtitle: "useCallback, useRef, custom hook, promise, async-await",
+    date: "2026-04-20T17:19:00",
+    tags: ["js", "react"],
+    slug: "react-basic-notes-3",
+    contentPath: "/content/logs/react-basic-notes-3.md",
+  },
 ];
