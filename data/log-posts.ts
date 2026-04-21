@@ -101,4 +101,13 @@ export const logPosts: LogPost[] = [
     slug: "react-basic-notes-3",
     contentPath: "/content/logs/react-basic-notes-3.md",
   },
+  {
+    id: "11",
+    title: "⚛️React 심화 — 비동기 통신과 API 연동 강의록",
+    subtitle: "JavaScript fetch / axios / React useEffect 실전 패턴",
+    date: "2026-04-21T16:22:00",
+    tags: ["js", "react"],
+    slug: "react-basic-notes-4",
+    contentPath: "/content/logs/react-basic-notes-4.md",
+  },
 ];
