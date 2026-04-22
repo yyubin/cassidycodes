@@ -110,4 +110,13 @@ export const logPosts: LogPost[] = [
     slug: "react-basic-notes-4",
     contentPath: "/content/logs/react-basic-notes-4.md",
   },
+  {
+    id: "12",
+    title: "⚛️Next.js — 커스텀 훅/Next.js intro",
+    subtitle: "",
+    date: "2026-04-22T17:22:00",
+    tags: ["js", "nextjs"],
+    slug: "next-basic-notes-1",
+    contentPath: "/content/logs/next-basic-notes-1.md",
+  },
 ];
