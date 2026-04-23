@@ -119,4 +119,13 @@ export const logPosts: LogPost[] = [
     slug: "next-basic-notes-1",
     contentPath: "/content/logs/next-basic-notes-1.md",
   },
+  {
+    id: "13",
+    title: "⚛️Next.js — 박스오피스 실습/Zustand",
+    subtitle: "",
+    date: "2026-04-23T16:51:00",
+    tags: ["js", "nextjs"],
+    slug: "next-basic-notes-2",
+    contentPath: "/content/logs/next-basic-notes-2.md",
+  },
 ];
