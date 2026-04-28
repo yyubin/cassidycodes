@@ -128,4 +128,13 @@ export const logPosts: LogPost[] = [
     slug: "next-basic-notes-2",
     contentPath: "/content/logs/next-basic-notes-2.md",
   },
+  {
+    id: "14",
+    title: "☕Java — 자바 실행 원리 훑기",
+    subtitle: "Java 실행환경, 컴파일 과정, 메모리 구조, 기본형/참조형",
+    date: "2026-04-28T17:17:00",
+    tags: ["java"],
+    slug: "java-intro-1.md",
+    contentPath: "/content/logs/java-intro-1.md",
+  },
 ];
