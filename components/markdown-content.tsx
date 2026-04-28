@@ -1,18 +1,21 @@
-'use client';
+"use client";
 
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import rehypeRaw from 'rehype-raw';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark, oneLight } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { useTheme } from 'next-themes';
-import { MermaidDiagram } from './mermaid-diagram';
-import 'katex/dist/katex.min.css';
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import {
+  oneDark,
+  oneLight,
+} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { useTheme } from "next-themes";
+import { MermaidDiagram } from "./mermaid-diagram";
+import "katex/dist/katex.min.css";
 
 interface MarkdownContentProps {
   content: string;
@@ -30,8 +33,8 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         [
           rehypeAutolinkHeadings,
           {
-            behavior: 'wrap',
-            properties: { className: ['anchor-link'] },
+            behavior: "wrap",
+            properties: { className: ["anchor-link"] },
           },
         ],
         rehypeKatex,
@@ -43,25 +46,44 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           children,
           ...props
         }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) {
-          const match = /language-(\w+)/.exec(className || '');
+          const match = /language-(\w+)/.exec(className || "");
 
           if (match) {
-            if (match[1] === 'mermaid') {
-              return <MermaidDiagram chart={String(children).replace(/\n$/, '')} />;
+            if (match[1] === "mermaid") {
+              return (
+                <MermaidDiagram chart={String(children).replace(/\n$/, "")} />
+              );
+            }
+            if (match[1] === "plain") {
+              return (
+                <pre
+                  style={{
+                    margin: "1.5rem 0",
+                    borderRadius: "0.5rem",
+                    fontSize: "0.875rem",
+                    padding: "1rem",
+                    overflowX: "auto",
+                    fontFamily: '"JetBrains Mono", monospace',
+                    lineHeight: "1.6",
+                  }}
+                  className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                  <code>{String(children).replace(/\n$/, "")}</code>
+                </pre>
+              );
             }
             return (
               <SyntaxHighlighter
-                style={(theme === 'dark' ? oneDark : oneLight) as any}
+                style={(theme === "dark" ? oneDark : oneLight) as any}
                 language={match[1]}
                 PreTag="div"
                 customStyle={{
-                  margin: '1.5rem 0',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
+                  margin: "1.5rem 0",
+                  borderRadius: "0.5rem",
+                  fontSize: "0.875rem",
+                  fontFamily: '"JetBrains Mono", monospace',
                 }}
-                {...props}
-              >
-                {String(children).replace(/\n$/, '')}
+                {...props}>
+                {String(children).replace(/\n$/, "")}
               </SyntaxHighlighter>
             );
           }
@@ -69,23 +91,25 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <code
               className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-mono"
-              {...props}
-            >
+              {...props}>
               {children}
             </code>
           );
         },
 
-        a({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-          const isExternal = href?.startsWith('http');
+        a({
+          href,
+          children,
+          ...props
+        }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+          const isExternal = href?.startsWith("http");
           return (
             <a
               href={href}
-              target={isExternal ? '_blank' : undefined}
-              rel={isExternal ? 'noopener noreferrer' : undefined}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
               className="text-cyan-600 dark:text-cyan-400 hover:underline font-medium"
-              {...props}
-            >
+              {...props}>
               {children}
               {isExternal && <span className="ml-1 text-xs">↗</span>}
             </a>
@@ -96,8 +120,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <h1
               className="text-3xl md:text-4xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100 group"
-              {...props}
-            >
+              {...props}>
               {children}
             </h1>
           );
@@ -107,8 +130,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <h2
               className="text-2xl md:text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100 group"
-              {...props}
-            >
+              {...props}>
               {children}
             </h2>
           );
@@ -118,8 +140,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <h3
               className="text-xl md:text-2xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100 group"
-              {...props}
-            >
+              {...props}>
               {children}
             </h3>
           );
@@ -129,8 +150,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <h4
               className="text-lg md:text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100"
-              {...props}
-            >
+              {...props}>
               {children}
             </h4>
           );
@@ -140,8 +160,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <blockquote
               className="border-l-4 border-cyan-500 dark:border-cyan-400 pl-4 py-2 my-4 italic text-gray-700 dark:text-gray-300 bg-cyan-50 dark:bg-cyan-950/30 rounded-r"
-              {...props}
-            >
+              {...props}>
               {children}
             </blockquote>
           );
@@ -152,8 +171,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             <div className="overflow-x-auto my-6">
               <table
                 className="min-w-full border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden"
-                {...props}
-              >
+                {...props}>
                 {children}
               </table>
             </div>
@@ -172,8 +190,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <th
               className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-700"
-              {...props}
-            >
+              {...props}>
               {children}
             </th>
           );
@@ -183,8 +200,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <td
               className="px-4 py-2 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-800"
-              {...props}
-            >
+              {...props}>
               {children}
             </td>
           );
@@ -194,8 +210,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <ul
               className="list-disc list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
-              {...props}
-            >
+              {...props}>
               {children}
             </ul>
           );
@@ -205,8 +220,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <ol
               className="list-decimal list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
-              {...props}
-            >
+              {...props}>
               {children}
             </ol>
           );
@@ -216,8 +230,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <li
               className="ml-2 pl-2 text-gray-700 dark:text-gray-300 leading-relaxed"
-              {...props}
-            >
+              {...props}>
               {children}
             </li>
           );
@@ -242,15 +255,19 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         },
 
         hr(props) {
-          return <hr className="my-8 border-gray-300 dark:border-gray-700" {...props} />;
+          return (
+            <hr
+              className="my-8 border-gray-300 dark:border-gray-700"
+              {...props}
+            />
+          );
         },
 
         details({ children, ...props }) {
           return (
             <details
               className="my-4 p-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50"
-              {...props}
-            >
+              {...props}>
               {children}
             </details>
           );
@@ -260,8 +277,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <summary
               className="cursor-pointer font-semibold text-gray-900 dark:text-gray-100 hover:text-cyan-600 dark:hover:text-cyan-400 select-none"
-              {...props}
-            >
+              {...props}>
               {children}
             </summary>
           );
@@ -271,8 +287,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           return (
             <p
               className="my-4 text-gray-700 dark:text-gray-300 leading-relaxed"
-              {...props}
-            >
+              {...props}>
               {children}
             </p>
           );
@@ -280,7 +295,9 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
 
         strong({ children, ...props }) {
           return (
-            <strong className="font-bold text-gray-900 dark:text-gray-100" {...props}>
+            <strong
+              className="font-bold text-gray-900 dark:text-gray-100"
+              {...props}>
               {children}
             </strong>
           );
@@ -293,8 +310,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             </em>
           );
         },
-      }}
-    >
+      }}>
       {content}
     </ReactMarkdown>
   );
