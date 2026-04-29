@@ -137,4 +137,13 @@ export const logPosts: LogPost[] = [
     slug: "java-intro-1.md",
     contentPath: "/content/logs/java-intro-1.md",
   },
+  {
+    id: "15",
+    title: "☕Java — 리터럴/변수, 연산자, 메서드",
+    subtitle: "",
+    date: "2026-04-29T19:00:00",
+    tags: ["java"],
+    slug: "java-intro-2.md",
+    contentPath: "/content/logs/java-intro-2.md",
+  },
 ];
