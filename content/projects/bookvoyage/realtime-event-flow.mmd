@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant U as 사용자
+    participant API as Spring Boot API
+    participant KAFKA as Kafka
+    participant HANDLER as RecommendationTracking<br/>EventHandler
+    participant REDIS as Redis ZSET
+
+    U->>API: 도서 조회 / 리뷰 작성 / 검색
+    API->>KAFKA: 행동 이벤트 발행
+    API-->>U: 즉시 응답 (비동기 처리)
+
+    Note over KAFKA,HANDLER: 이벤트 소비 (별도 스레드)
+    KAFKA->>HANDLER: 이벤트 전달
+    HANDLER->>REDIS: ZINCRBY<br/>recommend:user:{userId}
+
+    Note over REDIS: ZSET 점수 갱신 완료<br/>다음 요청부터 즉시 정렬 반영
+
+    U->>API: 다음 추천 요청
+    API->>REDIS: ZSET 조회 (캐시 히트)
+    REDIS-->>API: 실시간 반영된 정렬 결과
+    API-->>U: 갱신된 추천 반환

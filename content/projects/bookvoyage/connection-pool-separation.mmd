@@ -1,0 +1,34 @@
+flowchart TB
+    subgraph BEFORE["개선 전 — 단일 풀 고갈"]
+        P_OLD["HikariCP 단일 풀<br/>maximum-pool-size: 10"]
+        API_OLD["API 트래픽<br/>(추천 / 리뷰 / 로그인)"]
+        BATCH_OLD["배치 동기화<br/>(Neo4j / Elasticsearch)"]
+        TIMEOUT["waiting: 131개<br/>30초 타임아웃 → KO 2,009건"]
+    end
+
+    subgraph AFTER["개선 후 — 풀 분리 + 외부 API 방어"]
+        PRIMARY["Primary HikariPool<br/>size: 30 / API 전용"]
+        OUTBOX["Outbox HikariPool<br/>size: 5 / 배치 전용"]
+        API_NEW["API 트래픽"]
+        BATCH_NEW["Outbox 배치 동기화"]
+
+        subgraph EXT_GUARD["외부 API 방어"]
+            TIMEOUT_GUARD["타임아웃<br/>Connect 3s + Read 5s"]
+            FALLBACK["Kakao → Google 폴백"]
+            RCACHE["Redis 캐시<br/>TTL 1시간"]
+        end
+    end
+
+    API_OLD & BATCH_OLD --> P_OLD
+    P_OLD -->|"풀 고갈"| TIMEOUT
+
+    API_NEW --> PRIMARY
+    BATCH_NEW --> OUTBOX
+    API_NEW --> EXT_GUARD
+
+    style BEFORE fill:#ffebee
+    style AFTER fill:#e8f5e9
+    style TIMEOUT fill:#ef9a9a,color:#000
+    style PRIMARY fill:#81c784,color:#000
+    style OUTBOX fill:#aed581,color:#000
+    style EXT_GUARD fill:#e3f2fd

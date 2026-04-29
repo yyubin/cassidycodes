@@ -1,0 +1,41 @@
+flowchart TB
+    USER["사용자"]
+
+    subgraph AWS["AWS 인프라"]
+        ROUTE53["Route53<br/>DNS"]
+        CF["CloudFront<br/>CDN"]
+        S3["S3<br/>프론트엔드 정적 파일"]
+        EC2["EC2<br/>Spring Boot (Docker)"]
+        RDS["RDS<br/>MySQL (SoT)"]
+    end
+
+    subgraph DATA["데이터 레이어"]
+        NEO4J["Neo4j<br/>그래프 CF<br/>(k-hop 이웃 탐색)"]
+        ES["Elasticsearch<br/>콘텐츠 CB<br/>(MLT / TF-IDF)"]
+        REDIS["Redis<br/>추천 ZSET 캐시<br/>+ 외부 API 캐시"]
+        KAFKA["Kafka<br/>행동 이벤트 스트림"]
+    end
+
+    subgraph EXT["외부 연동"]
+        OPENAI["OpenAI<br/>페르소나 / 추천 설명"]
+        KAKAO["Kakao Books API<br/>(Google 폴백)"]
+    end
+
+    USER --> ROUTE53
+    ROUTE53 --> CF
+    CF --> S3
+    CF --> EC2
+
+    EC2 --> RDS
+    EC2 --> NEO4J & ES & REDIS
+    EC2 --> KAFKA
+    KAFKA --> EC2
+    EC2 --> OPENAI
+    EC2 --> KAKAO
+
+    style AWS fill:#e3f2fd
+    style DATA fill:#fff3e0
+    style EXT fill:#f3e5f5
+    style EC2 fill:#64b5f6,color:#000
+    style REDIS fill:#ef9a9a,color:#000
+    style KAFKA fill:#ffb74d,color:#000

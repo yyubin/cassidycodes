@@ -204,6 +204,32 @@ export default async function ProjectDetailPage({ params }: Props) {
             </ul>
           </section>
 
+          {/* Retrospective */}
+          {project.retrospective && (
+            <section className="space-y-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                회고
+              </h2>
+              <div className="p-5 rounded-lg border-l-4 border-cyan-400 dark:border-cyan-600 bg-cyan-50 dark:bg-cyan-900/10">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed italic">
+                  {project.retrospective.summary}
+                </p>
+              </div>
+              <ul className="space-y-3 pt-1">
+                {project.retrospective.learnings.map((item, index) => (
+                  <li key={index} className="flex gap-3">
+                    <span className="text-cyan-500 dark:text-cyan-400 mt-1 flex-shrink-0 font-bold">
+                      —
+                    </span>
+                    <span className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           {/* Tech Stack */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">

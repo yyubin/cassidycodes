@@ -1,0 +1,30 @@
+flowchart TD
+    REQ["추천 요청"] --> AUTH{"로그인?"}
+    AUTH -->|"비로그인"| POPULAR["인기도 기반 기본 추천<br/>(Elasticsearch)"]
+    AUTH -->|"로그인"| CACHE{"Redis ZSET<br/>캐시 존재?"}
+
+    CACHE -->|"히트"| ZSET["Redis ZSET 조회"]
+    CACHE -->|"미스"| GEN["후보 생성"]
+
+    subgraph CANDIDATES["후보 생성"]
+        NEO4J["Neo4j 후보<br/>그래프 CF / k-hop 이웃"]
+        ES_CB["Elasticsearch 후보<br/>MLT / Semantic / Popularity"]
+    end
+
+    GEN --> NEO4J & ES_CB
+    NEO4J & ES_CB --> DEDUP["중복 제거"]
+
+    DEDUP --> SCORE["하이브리드 스코어링<br/>Graph x0.4 + Semantic x0.3<br/>+ Popularity x0.1 + Freshness x0.05"]
+
+    SCORE --> STORE["Redis ZSET 저장<br/>(TTL 3시간)"]
+    STORE --> SORT["정렬 / 페이징"]
+    ZSET --> SORT
+
+    SORT --> SAMPLE["윈도우 샘플링<br/>(상위 품질 유지 + 다양성 확보)"]
+    SAMPLE --> RET["결과 반환"]
+    POPULAR --> RET
+
+    style CANDIDATES fill:#e3f2fd
+    style SCORE fill:#fff3e0
+    style STORE fill:#e8f5e9
+    style SAMPLE fill:#f3e5f5

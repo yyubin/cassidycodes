@@ -31,4 +31,8 @@ export type Project = {
     description: string;
     mermaidFile: string;
   }[];
+  retrospective?: {
+    summary: string;
+    learnings: string[];
+  };
 };

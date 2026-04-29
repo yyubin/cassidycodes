@@ -184,6 +184,16 @@ export const projects: Project[] = [
       },
     ],
     githubUrl: "https://github.com/yyubin/sprout",
+    retrospective: {
+      summary:
+        "Spring을 매일 쓰면서도 내부가 어떻게 돌아가는지 모른다는 불안감이 컸는데, 직접 구현하면서 그 불안이 사라졌다. 프레임워크는 마법이 아니라 잘 설계된 패턴의 집합이라는 걸 몸으로 이해했다.",
+      learnings: [
+        "NIO Selector 기반 이벤트 루프를 구현하면서 블로킹과 논블로킹의 차이가 코드 레벨에서 어떻게 표현되는지 직접 경험했다. Spring이 왜 그런 설계를 선택했는지 자연스럽게 납득됐다.",
+        "RFC 6455를 읽고 WebSocket을 구현하면서, 명세서가 단순히 '이렇게 해라'가 아니라 '왜 이렇게 설계했는가'까지 담고 있다는 것을 알았다. 마스킹, Sec-WebSocket-Accept, close 핸드셰이크 모두 납득할 이유가 있었다.",
+        "JIT 최적화 분석을 통해 '빠른 코드'가 단순히 알고리즘 최적화가 아니라 JVM이 최적화하기 좋은 코드를 작성하는 것임을 배웠다. async-profiler와 JITWatch를 쓰기 전까지는 막연했던 개념이었다.",
+        "바퀴를 다시 만드는 것이 낭비처럼 보이지만, 그 과정에서 얻는 이해의 깊이는 다른 방법으로 대체하기 어렵다. 687개의 테스트를 작성하면서 설계의 결함을 스스로 발견하고 고치는 경험이 특히 좋았다.",
+      ],
+    },
   },
   {
     id: "2",
@@ -265,6 +275,16 @@ export const projects: Project[] = [
       },
     ],
     githubUrl: "https://github.com/yyubin/jinx",
+    retrospective: {
+      summary:
+        "처음엔 간단해 보였는데, 갈수록 APT라는 환경의 특수성과 DB 마이그레이션이라는 분야의 복잡성이 드러났다. rename 탐지를 제거하기로 한 결정이 기술적으로 가장 어려웠지만, 가장 올바른 선택이었다고 생각한다.",
+      learnings: [
+        "APT는 런타임과 완전히 다른 환경이다. Class.forName()이 안 되고, TypeElement의 라운드 유효성을 관리해야 하는 등 처음엔 당황스러운 제약이 많았다. 하지만 그 제약들이 생긴 이유를 이해하면서 컴파일러 동작 방식을 더 깊이 배웠다.",
+        "rename 탐지가 '스키마 매칭'이라는 20년 된 연구 분야의 문제임을 뒤늦게 알았다. 코딩을 시작하기 전에 해당 도메인 공부가 먼저였어야 했다. 기술보다 도메인 이해가 먼저라는 교훈을 얻었다.",
+        "'똑똑한 자동화'가 DB처럼 중요한 시스템에서는 오히려 위험할 수 있다. Deterministic한 결과를 내는 단순한 도구가 더 신뢰할 수 있다는 걸 배웠고, 이를 실제 결정에 반영했다.",
+        "Maven Central 배포는 생각보다 진입장벽이 높았다. 멀티 모듈 구조 설계와 배포 파이프라인 구성이 기능 구현만큼이나 중요한 작업이었고, 라이브러리를 만드는 것과 배포 가능한 라이브러리를 만드는 것은 다르다는 걸 체감했다.",
+      ],
+    },
     externalLinks: [
       {
         label: "Maven Central",
@@ -275,5 +295,91 @@ export const projects: Project[] = [
         url: "https://plugins.gradle.org/plugin/io.github.yyubin.jinx",
       },
     ],
+  },
+  {
+    id: "3",
+    title: "BookVoyage",
+    slug: "bookvoyage",
+    tldr: "도서 소셜 플랫폼. Neo4j 그래프 CF + Elasticsearch CB 하이브리드 추천 시스템, Kafka + Redis ZSET 실시간 이벤트 반영. Gatling 부하 테스트로 커넥션 풀 고갈 문제를 발견하고 개선하여 p99 60,002ms → 106ms, 실패율 4.5% → 0% 달성.",
+    overview:
+      "도서 기록과 리뷰를 공유하는 소셜 플랫폼입니다. Neo4j 그래프 기반 협업 필터링(CF)과 Elasticsearch 콘텐츠 기반 필터링(CB)을 결합한 하이브리드 추천 파이프라인을 직접 설계했습니다. Kafka로 수집한 사용자 행동 이벤트를 Redis ZSET에 즉시 반영하여 다음 추천 요청부터 실시간으로 정렬에 영향을 주는 구조를 구현했습니다.\n\nGatling으로 4단계 부하 시뮬레이션(Baseline → Batch ON → Spike → Cooldown)을 진행했고, HikariCP 단일 커넥션 풀 고갈(waiting 131개)이 근본 원인임을 확인했습니다. Primary 풀(30)과 Outbox 배치 전용 풀(5)로 분리하고 외부 API 타임아웃과 Redis 캐싱을 추가하여 p99를 60,002ms에서 106ms로 개선하고 실패를 완전히 제거했습니다.",
+    heroStats: [
+      { label: "p99 응답 개선", value: "99.8%" },
+      { label: "실패율", value: "0%" },
+      { label: "처리량 향상", value: "+33%" },
+      { label: "배포 환경", value: "AWS" },
+    ],
+    achievements: [
+      "Neo4j 그래프 CF + Elasticsearch CB 하이브리드 추천 파이프라인 설계 (Graph×0.4 + Semantic×0.3 + Popularity×0.1 + Freshness×0.05)",
+      "Kafka + Redis ZSET(ZINCRBY) 기반 사용자 행동 실시간 반영 구조 구현",
+      "윈도우 샘플링으로 추천 상위 품질 유지하면서 다양성 확보",
+      "OpenAI 기반 사용자 독서 페르소나 자동 생성 및 추천 설명 생성",
+      "HikariCP 단일 풀 고갈(10개) 원인 분석, Primary(30) / Outbox(5) 이중 풀 분리로 API-배치 커넥션 경합 제거",
+      "Kakao → Google Books 폴백 + Redis 캐싱(TTL 1시간) + 타임아웃(Connect 3s + Read 5s)으로 외부 API 장애 전파 차단",
+      "Gatling 4단계 시뮬레이션: p99 60,002ms → 106ms, 실패율 4.5% → 0%, 처리량 16.26 → 21.59 RPS",
+      "AWS EC2 + RDS + S3 + CloudFront + Route53 + Docker 기반 배포",
+    ],
+    techStack: [
+      "Java",
+      "Spring Boot",
+      "MySQL",
+      "Neo4j",
+      "Elasticsearch",
+      "Redis",
+      "Kafka",
+      "OpenAI",
+      "Gatling",
+      "AWS (EC2 / RDS / S3 / CloudFront / Route53)",
+      "Docker",
+    ],
+    relatedArticles: [
+      {
+        title: "p99 60초에서 106ms로 — BookVoyage 성능 개선 보고서",
+        section: "articles",
+        slug: "bookvoyage-performance-improvement-report",
+      },
+      {
+        title: "BookVoyage 추천 시스템 v1 설계와 한계",
+        section: "til",
+        slug: "bookvoyage-recommendation-system-v1",
+      },
+    ],
+    diagrams: [
+      {
+        title: "전체 시스템 아키텍처",
+        description:
+          "AWS 인프라(EC2 / RDS / S3 / CloudFront / Route53)와 데이터 레이어(Neo4j / Elasticsearch / Redis / Kafka), 외부 연동(OpenAI / Kakao Books) 전체 구성",
+        mermaidFile: "bookvoyage/system-architecture",
+      },
+      {
+        title: "하이브리드 추천 파이프라인",
+        description:
+          "Redis ZSET 캐시 히트/미스에 따라 Neo4j CF + Elasticsearch CB 후보 생성 → 하이브리드 스코어링 → 윈도우 샘플링까지의 전체 추천 흐름",
+        mermaidFile: "bookvoyage/recommendation-pipeline",
+      },
+      {
+        title: "Kafka → Redis ZSET 실시간 이벤트 반영",
+        description:
+          "사용자 행동 이벤트가 Kafka를 통해 Redis ZSET에 ZINCRBY되어 다음 추천 요청부터 정렬에 즉시 반영되는 비동기 구조",
+        mermaidFile: "bookvoyage/realtime-event-flow",
+      },
+      {
+        title: "HikariCP 커넥션 풀 분리 & 외부 API 방어",
+        description:
+          "단일 풀 고갈(KO 2,009건) 원인 분석 및 Primary/Outbox 이중 풀 분리, 외부 API 타임아웃 + 폴백 + Redis 캐싱 개선 구조",
+        mermaidFile: "bookvoyage/connection-pool-separation",
+      },
+    ],
+    githubUrl: "https://github.com/yyubin/bookvoyage",
+    retrospective: {
+      summary:
+        "추천 시스템은 논문이나 블로그에서 보면 명확해 보이지만, 실제로 만들어보면 데이터가 없고 평가 기준도 불분명하다. 오히려 Gatling 부하 테스트에서 발견한 커넥션 풀 고갈 문제가 더 실질적이고 깊은 배움이었다.",
+      learnings: [
+        "Gatling 테스트 전에는 커넥션 풀 설정이 그냥 숫자 하나라고 생각했다. 테스트 결과를 보고 나서야 커넥션 풀이 동시성 제어 장치이며, 풀 크기는 트래픽 패턴과 배치 작업을 함께 고려해서 설계해야 한다는 걸 이해했다.",
+        "외부 API(Kakao Books)가 느려지면 내 서버의 DB 커넥션도 같이 고갈된다는 연쇄 장애 패턴을 직접 경험했다. 시스템 경계에서는 항상 타임아웃과 폴백을 설정해야 한다는 것을 깨달았다.",
+        "Neo4j + Elasticsearch + Redis를 조합한 추천 파이프라인은 원하는 방향으로 만들었지만, 추천 품질을 객관적으로 측정하는 체계를 갖추지 못했다. 시스템을 만들면서 동시에 평가 지표도 설계했어야 했다는 아쉬움이 남는다.",
+        "추천 시스템을 스스로 평가하면서 내가 구현한 것과 구현하지 않은 것을 명확히 정리할 수 있었다. 내 주분야가 아닌 영역에서 적절한 선을 그을 수 있는 것도 중요한 판단이라는 걸 배웠다.",
+      ],
+    },
   },
 ];

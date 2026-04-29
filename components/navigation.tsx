@@ -1,14 +1,15 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const menuItems = [
-  { name: 'Home', href: '/' },
-  { name: 'Logs', href: '/logs' },
-  { name: 'TIL', href: '/til' },
-  { name: 'Articles', href: '/articles' },
-  { name: 'Reflections', href: '/reflections' },
+  { name: "Home", href: "/" },
+  { name: "Logs", href: "/logs" },
+  { name: "TIL", href: "/til" },
+  { name: "Articles", href: "/articles" },
+  { name: "Reflections", href: "/reflections" },
+  { name: "Projects", href: "/projects" },
 ];
 
 export function Navigation() {
@@ -24,10 +25,9 @@ export function Navigation() {
             href={item.href}
             className={`text-sm font-medium transition-colors ${
               isActive
-                ? 'text-cyan-600 dark:text-cyan-400'
-                : 'text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400'
-            }`}
-          >
+                ? "text-cyan-600 dark:text-cyan-400"
+                : "text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400"
+            }`}>
             {item.name}
           </Link>
         );
