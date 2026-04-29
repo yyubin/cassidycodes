@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant C as Client
+    participant PD as ProtocolDetector
+    participant HS as WebSocketHandshaker
+    participant SE as DefaultWebSocketSession
+
+    C->>HS: GET /ws HTTP/1.1<br/>Upgrade: websocket<br/>Connection: Upgrade<br/>Sec-WebSocket-Key: dGhl...<br/>Sec-WebSocket-Version: 13
+
+    Note over PD: 초기 512바이트 스캔
+    HS->>PD: detect(ByteBuffer)
+    PD->>PD: buffer.mark() 읽기 buffer.reset()
+    PD-->>HS: WEBSOCKET 반환
+
+    Note over HS: 1단계 - 필수 헤더 검증
+    HS->>HS: Upgrade == websocket?
+    HS->>HS: Connection.contains(upgrade)?
+    HS->>HS: Sec-WebSocket-Version == 13?
+
+    alt 검증 실패
+        HS-->>C: HTTP/1.1 400 Bad Request
+    else 검증 성공
+        Note over HS: 2단계 - Sec-WebSocket-Accept 계산
+        HS->>HS: combined = key + MAGIC_GUID
+        HS->>HS: sha1Hash = SHA-1(combined)
+        HS->>HS: accept = Base64(sha1Hash)
+
+        HS-->>C: HTTP/1.1 101 Switching Protocols<br/>Upgrade: websocket<br/>Sec-WebSocket-Accept: ...
+
+        Note over C,SE: WebSocket 연결 수립!
+        HS->>SE: DefaultWebSocketSession 생성
+        SE->>SE: OnOpen 메서드 호출
+    end

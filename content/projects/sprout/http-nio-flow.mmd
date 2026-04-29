@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant C as Client
+    participant S as Selector<br/>(I/O Thread)
+    participant CM as ConnectionManager
+    participant PD as ProtocolDetector
+    participant HC as HttpConnectionHandler
+    participant W as Worker Thread
+    participant D as Dispatcher
+
+    Note over S: 1. 서버 시작 & OP_ACCEPT 등록
+    C->>S: 연결 요청
+    S->>CM: OP_ACCEPT 이벤트
+    CM->>C: SocketChannel 생성<br/>(Non-blocking)
+
+    Note over CM,PD: 2. 프로토콜 감지
+    CM->>PD: 초기 바이트 분석
+    PD-->>CM: "HTTP/1.1" 감지
+
+    Note over CM,HC: 3. 핸들러 등록
+    CM->>HC: HttpConnectionHandler 생성
+    CM->>S: OP_READ 등록 + 핸들러 첨부
+
+    C->>S: HTTP 요청 전송
+    S->>HC: OP_READ 이벤트
+    HC->>HC: ByteBuffer로 읽기<br/>(Non-blocking)
+
+    Note over HC: 4. 요청 완료 체크
+    HC->>HC: isRequestComplete()?
+
+    Note over HC,W: 5. 워커 스레드에 위임
+    HC->>S: interestOps(0)<br/>(이벤트 감지 중단)
+    HC->>W: 요청 처리 태스크 제출
+
+    W->>D: 요청 파싱 & 디스패치
+    D->>D: 컨트롤러 실행
+    D-->>W: HttpResponse 생성
+
+    Note over W,HC: 6. 응답 준비
+    W->>HC: ByteBuffer로 변환
+    HC->>S: OP_WRITE 등록<br/>selector.wakeup()
+
+    S->>HC: OP_WRITE 이벤트
+    HC->>C: 응답 전송<br/>(Non-blocking)
+
+    Note over HC: 7. 연결 종료
+    HC->>S: close() & 무효화

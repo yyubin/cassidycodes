@@ -1,0 +1,33 @@
+flowchart LR
+    subgraph COMPILE["Java 컴파일 파이프라인"]
+        SRC["Source Files (.java)"]
+        PARSE[Parser]
+        AST["AST (구문 트리)"]
+        APT["Annotation Processing<br/>Round 1 → N → Final"]
+        BC["Bytecode (.class)"]
+    end
+
+    subgraph JINX["Jinx Processor"]
+        SCAN["Entity 스캔<br/>@Entity / @MappedSuperclass / @Embeddable"]
+        CTX["ProcessingContext 구축<br/>캐시 / 지연 큐 초기화"]
+        BUILD["SchemaModel 구축<br/>Table / Column / FK / Index"]
+        DIFF["이전 스냅샷 JSON과 Diff"]
+        GEN["DDL / 롤백 SQL 생성<br/>(MySQL 대응)"]
+        SNAP["새 스냅샷 저장<br/>schema-snapshot.json"]
+    end
+
+    SRC --> PARSE
+    PARSE --> AST
+    AST --> APT
+    APT --> JINX
+    SCAN --> CTX
+    CTX --> BUILD
+    BUILD --> DIFF
+    DIFF --> GEN
+    GEN --> SNAP
+    APT --> BC
+
+    style COMPILE fill:#e3f2fd
+    style JINX fill:#e8f5e9
+    style SCAN fill:#a5d6a7,color:#000
+    style GEN fill:#a5d6a7,color:#000

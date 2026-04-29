@@ -1,0 +1,31 @@
+flowchart TD
+    START[새 연결 수락<br/>OP_ACCEPT]
+    DETECT{프로토콜 감지}
+
+    WS_CHECK{Upgrade:<br/>websocket?}
+
+    HTTP_HANDLER[NioHttpProtocolHandler /<br/>BioHttpProtocolHandler]
+    WS_HANDLER[NioWebSocketProtocolHandler<br/>항상 NIO]
+
+    MODE{서버 모드?}
+
+    NIO[Pure NIO<br/>NioHttpProtocolHandler]
+    BIO[Hybrid<br/>BioHttpProtocolHandler]
+
+    START --> DETECT
+    DETECT --> WS_CHECK
+
+    WS_CHECK -->|Yes| WS_HANDLER
+    WS_CHECK -->|No| MODE
+
+    MODE -->|nio| NIO
+    MODE -->|hybrid| BIO
+
+    WS_HANDLER --> WS_END[NIO 기반<br/>실시간 통신]
+    NIO --> NIO_END[이벤트 루프<br/>상태 관리]
+    BIO --> BIO_END[워커 스레드<br/>Blocking I/O]
+
+    style WS_HANDLER fill:#81c784
+    style WS_END fill:#81c784
+    style NIO fill:#64b5f6
+    style BIO fill:#ffb74d

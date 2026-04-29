@@ -1,0 +1,41 @@
+flowchart TB
+    subgraph BYTE1["첫 번째 바이트"]
+        B1A["FIN 1bit — 최종 프레임 여부"]
+        B1B["RSV 3bit — 예약 비트"]
+        B1C["Opcode 4bit — 1=text / 2=binary / 8=close"]
+    end
+
+    subgraph BYTE2["두 번째 바이트"]
+        B2A["MASK 1bit — 클라이언트 서버 방향은 반드시 1"]
+        B2B["PayloadLen 7bit — 0 ~ 127"]
+    end
+
+    subgraph EXTLEN["확장 페이로드 길이"]
+        EL1["125 이하: 추가 바이트 없음 (소형 메시지)"]
+        EL2["126: 2바이트 추가 (최대 65,535 byte)"]
+        EL3["127: 8바이트 추가 (최대 18 엑사바이트)"]
+    end
+
+    subgraph MASKING["마스킹 처리 (RFC 6455 Section 5.3)"]
+        M1["마스킹 키 4바이트 읽기"]
+        M2["MaskingInputStream으로 래핑"]
+        M3["XOR 언마스킹: byte_i XOR key_(i mod 4)"]
+    end
+
+    RESULT["WebSocketFrame(fin, opcode, InputStream)"]
+
+    BYTE1 --> BYTE2
+    BYTE2 --> EXTLEN
+    B2B -->|값에 따라| EL1
+    B2B -->|값에 따라| EL2
+    B2B -->|값에 따라| EL3
+    EXTLEN --> MASKING
+    M1 --> M2
+    M2 --> M3
+    MASKING --> RESULT
+
+    style BYTE1 fill:#e3f2fd
+    style BYTE2 fill:#e3f2fd
+    style EXTLEN fill:#fff3e0
+    style MASKING fill:#f3e5f5
+    style RESULT fill:#81c784,color:#000

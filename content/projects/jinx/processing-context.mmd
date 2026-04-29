@@ -1,0 +1,37 @@
+flowchart TB
+    ROUND["beginRound 호출<br/>(각 처리 라운드 시작 시)"]
+
+    subgraph CTX["ProcessingContext"]
+        ENV["ProcessingEnvironment<br/>컴파일러 API 진입점"]
+
+        subgraph CACHE["캐시 레이어 (라운드마다 초기화)"]
+            SC["mappedSuperclassElements<br/>FQN → TypeElement"]
+            EC["embeddableElements<br/>FQN → TypeElement"]
+            DC["descriptorCache<br/>FQN → List of AttributeDescriptor"]
+            PC["pkAttributeToColumnMap<br/>entity → attr → columns"]
+        end
+
+        subgraph STATE["처리 상태"]
+            DQ["deferredEntities<br/>Queue of EntityModel"]
+            VS["mappedByVisitedSet<br/>양방향 관계 순환 감지"]
+        end
+
+        SM["SchemaModel<br/>전체 스키마 결과물"]
+    end
+
+    ROUND -->|"초기화"| CACHE
+    ROUND -->|"초기화"| VS
+
+    DC -->|"캐시 히트 → 재계산 방지"| FAST["빠른 AttributeDescriptor 조회"]
+    PC -->|"@MapsId FK 처리"| FK["복합 키 컬럼 매핑"]
+    VS -->|"방문 여부 체크"| CYCLE["mappedBy 무한 루프 방지"]
+    DQ -->|"최종 라운드에서 소진"| RETRY["지연 엔티티 재처리"]
+
+    CACHE --> SM
+    STATE --> SM
+
+    style CTX fill:#f3e5f5
+    style CACHE fill:#e8f5e9
+    style STATE fill:#fff3e0
+    style SM fill:#81c784,color:#000
+    style ROUND fill:#e3f2fd

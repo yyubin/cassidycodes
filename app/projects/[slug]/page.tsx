@@ -5,6 +5,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { DiagramSection } from '@/components/diagram-section';
 import { projects } from '@/data/projects';
+import { loadProjectDiagrams } from '@/lib/diagrams';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -52,6 +53,8 @@ export default async function ProjectDetailPage({ params }: Props) {
     notFound();
   }
 
+  const diagrams = loadProjectDiagrams(project);
+
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors">
       <Header />
@@ -70,8 +73,8 @@ export default async function ProjectDetailPage({ params }: Props) {
               </p>
             )}
 
-            {/* GitHub Link */}
-            <div className="pt-2">
+            {/* Links */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
               <a
                 href={project.githubUrl}
                 target="_blank"
@@ -83,6 +86,21 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </svg>
                 View on GitHub
               </a>
+
+              {project.externalLinks?.map((link) => (
+                <a
+                  key={link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm text-cyan-600 dark:text-cyan-400 hover:underline"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  {link.label}
+                </a>
+              ))}
             </div>
           </header>
 
@@ -116,8 +134,8 @@ export default async function ProjectDetailPage({ params }: Props) {
           </section>
 
           {/* Architecture Diagrams */}
-          {project.diagrams && project.diagrams.length > 0 && (
-            <DiagramSection diagrams={project.diagrams} />
+          {diagrams.length > 0 && (
+            <DiagramSection diagrams={diagrams} />
           )}
 
           {/* Reflection Article - 문제 정의 & 해결 과정 */}

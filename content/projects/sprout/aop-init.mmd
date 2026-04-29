@@ -1,0 +1,71 @@
+flowchart TB
+    START[애플리케이션 시작]
+
+    subgraph INFRA["1️⃣ 인프라 빈 생성<br/>(order=100)"]
+        I1[AspectPostProcessor]
+        I2[AdvisorRegistry]
+        I3[AdviceFactory]
+        I4[PointcutFactory]
+        I5[CglibProxyFactory]
+    end
+
+    subgraph INIT["2️⃣ AOP 초기화<br/>(PostInfrastructureInitializer)"]
+        N1[AopPostInfrastructure<br/>Initializer 실행]
+        N2[AspectPostProcessor에<br/>basePackages 전달]
+        N3[Aspect 클래스 스캔]
+    end
+
+    subgraph SCAN["3️⃣ Advisor 생성"]
+        S1[각 Aspect 메서드 분석]
+        S2{어노테이션?}
+        S3[Before]
+        S4[After]
+        S5[Around]
+    end
+
+    subgraph BUILD["4️⃣ AdviceBuilder 실행"]
+        B1[파라미터 검증]
+        B2[PointcutFactory로<br/>Pointcut 생성]
+        B3[Advice 인터셉터 생성<br/>Before/After/Around]
+        B4[DefaultAdvisor 조립<br/>Pointcut+Advice+Order]
+    end
+
+    subgraph REGISTRY["5️⃣ AdvisorRegistry"]
+        R1[Advisor 등록]
+        R2[Order 기준 정렬]
+        R3[캐시 초기화]
+    end
+
+    START --> INFRA
+    I1 --> I2
+    I2 --> I3
+    I3 --> I4
+    I4 --> I5
+
+    INFRA --> INIT
+    N1 --> N2
+    N2 --> N3
+
+    INIT --> SCAN
+    S1 --> S2
+    S2 -->|Before| S3
+    S2 -->|After| S4
+    S2 -->|Around| S5
+
+    S3 --> BUILD
+    S4 --> BUILD
+    S5 --> BUILD
+
+    B1 --> B2
+    B2 --> B3
+    B3 --> B4
+
+    BUILD --> REGISTRY
+    R1 --> R2
+    R2 --> R3
+
+    style INFRA fill:#e3f2fd
+    style INIT fill:#fff3e0
+    style SCAN fill:#f3e5f5
+    style BUILD fill:#e8f5e9
+    style REGISTRY fill:#fce4ec

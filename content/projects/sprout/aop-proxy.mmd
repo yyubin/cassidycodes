@@ -1,0 +1,49 @@
+sequenceDiagram
+    participant BF as BeanFactory
+    participant PP as AspectPostProcessor<br/>(BeanPostProcessor)
+    participant REG as AdvisorRegistry
+    participant PF as CglibProxyFactory
+
+    Note over BF: Application Bean 생성<br/>(order=300)
+
+    BF->>BF: 1. createBean(UserService)
+    BF->>BF: 2. 생성자로 인스턴스화
+    BF->>BF: 3. 의존성 주입 완료
+
+    Note over BF,PP: 4️⃣ BeanPostProcessor 실행
+
+    BF->>PP: postProcessAfterInitialization<br/>(beanName, userServiceBean)
+
+    PP->>PP: UserService의 모든 메서드 순회
+
+    loop 각 메서드마다
+        PP->>REG: getApplicableAdvisors<br/>(UserService.class, method)
+
+        REG->>REG: 캐시 확인
+
+        alt 캐시 미스
+            REG->>REG: 모든 Advisor의<br/>Pointcut.matches() 체크
+            REG->>REG: 결과 캐싱
+        end
+
+        REG-->>PP: List<Advisor>
+    end
+
+    alt 적용할 Advisor 있음
+        PP->>PP: needsProxy = true
+
+        Note over PP,PF: 5️⃣ CGLIB 프록시 생성
+
+        PP->>PF: createProxy(UserService,<br/>bean, registry, ctorMeta)
+
+        PF->>PF: Enhancer.setSuperclass<br/>(UserService.class)
+        PF->>PF: Enhancer.setCallback<br/>(BeanMethodInterceptor)
+        PF->>PF: Enhancer.create()
+
+        PF-->>PP: 프록시 객체
+
+        PP-->>BF: 프록시 반환
+        BF->>BF: 프록시를 싱글톤 캐시에 저장
+    else 적용할 Advisor 없음
+        PP-->>BF: 원본 빈 그대로 반환
+    end

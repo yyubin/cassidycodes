@@ -1,0 +1,42 @@
+flowchart TB
+    FRAME["WebSocketFrame 수신"]
+    CHAIN["FrameHandler 체인 (단편화 조립 등)"]
+
+    subgraph DISPATCH["WebSocketFrameDispatcher"]
+        D1{"JsonWebSocketMessageDispatcher\nsupports()?"}
+        D2{"RawBinaryWebSocketMessageDispatcher\nsupports()?"}
+        UNHANDLED["미처리 프레임"]
+    end
+
+    subgraph ABSTRACT["AbstractWebSocketMessageDispatcher (공통 로직)"]
+        A1["prepareDispatchInfo()\ndestination + payload 추출"]
+        A2["EndpointRegistry에서\n@MessageMapping 메서드 탐색"]
+        A3["WebSocketArgumentResolver로\n파라미터 자동 바인딩"]
+        A4["리플렉션으로 메서드 invoke"]
+        A5["DispatchResult 반환\n(handled, streamConsumed)"]
+    end
+
+    subgraph RESOLVERS["ArgumentResolver 구현체"]
+        R1["JsonPayloadArgumentResolver - DTO 역직렬화"]
+        R2["StringPayloadArgumentResolver - String"]
+        R3["InputStreamPayloadArgumentResolver - InputStream 직접"]
+        R4["PathVariableArgumentResolver - 경로 변수 추출"]
+    end
+
+    FRAME --> CHAIN
+    CHAIN --> DISPATCH
+    D1 -->|"Yes (opcode=1, JSON 텍스트)"| ABSTRACT
+    D1 -->|No| D2
+    D2 -->|"Yes (opcode=2, 바이너리)"| ABSTRACT
+    D2 -->|No| UNHANDLED
+
+    A1 --> A2
+    A2 --> A3
+    A3 --> RESOLVERS
+    RESOLVERS --> A4
+    A4 --> A5
+
+    style DISPATCH fill:#e3f2fd
+    style ABSTRACT fill:#fff3e0
+    style RESOLVERS fill:#f3e5f5
+    style UNHANDLED fill:#ffcdd2

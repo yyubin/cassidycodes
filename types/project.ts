@@ -12,6 +12,10 @@ export type Project = {
     slug: string;
   }[];
   githubUrl: string;
+  externalLinks?: {
+    label: string;
+    url: string;
+  }[];
   role?: string;
   heroStats?: {
     label: string;
@@ -25,6 +29,6 @@ export type Project = {
   diagrams?: {
     title: string;
     description: string;
-    mermaidCode: string;
+    mermaidFile: string;
   }[];
 };

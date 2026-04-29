@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant BF as BeanFactory
+    participant FS as findStrategy()
+    participant CS as ConstructorStrategy
+    participant FM as FactoryMethodStrategy
+    participant DR as DependencyResolver<br/>(Chain of Responsibility)
+    participant PP as BeanPostProcessor
+
+    Note over BF: createBean(BeanDefinition) 호출
+
+    BF->>FS: 생성 방식 확인
+
+    alt CONSTRUCTOR 방식
+        FS->>CS: supports(CONSTRUCTOR)?
+        CS-->>FS: true
+        FS-->>BF: ConstructorStrategy 반환
+
+        BF->>DR: resolve 의존성
+        DR->>DR: SingleBeanResolver<br/>ListBeanResolver 체인
+        DR-->>BF: Object[] deps
+
+        BF->>CS: instantiate(def, deps)
+        CS->>CS: constructor.newInstance(deps)
+        CS-->>BF: 빈 인스턴스
+
+    else FACTORY_METHOD 방식
+        FS->>FM: supports(FACTORY_METHOD)?
+        FM-->>FS: true
+        FS-->>BF: FactoryMethodStrategy 반환
+
+        BF->>BF: getBean(factoryBeanName)<br/>@Configuration 인스턴스
+        BF->>DR: resolve 메서드 파라미터
+        DR-->>BF: Object[] deps
+
+        BF->>FM: instantiate(def, deps)
+        FM->>FM: method.invoke(factoryBean, deps)
+        FM-->>BF: 빈 인스턴스
+    end
+
+    Note over BF,PP: 3️⃣ 후처리
+    BF->>PP: postProcessBeforeInit
+    PP-->>BF: 처리된 빈
+    BF->>PP: postProcessAfterInit
+    PP-->>BF: 최종 빈 (프록시 가능)
+
+    BF->>BF: singletonObjects에 저장

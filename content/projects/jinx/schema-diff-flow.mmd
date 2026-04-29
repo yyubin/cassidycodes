@@ -1,0 +1,35 @@
+flowchart TB
+    subgraph INPUT["입력"]
+        PREV["이전 스냅샷<br/>schema-snapshot.json"]
+        CURR["현재 Entity 스캔<br/>SchemaModel"]
+    end
+
+    subgraph DIFF["Diff 엔진 (Deterministic)"]
+        TD["TableDiffer<br/>테이블 추가 / 삭제"]
+        CD["ColumnDiffer<br/>컬럼 추가 / 삭제 / 변경"]
+        IDX["IndexDiffer<br/>인덱스 변경"]
+        FK["ForeignKeyDiffer<br/>FK 제약조건 변경"]
+    end
+
+    subgraph OUTPUT["출력"]
+        DDL["DDL 변경 목록<br/>ADD / DROP / MODIFY"]
+        ROLL["롤백 SQL<br/>(역방향 DDL)"]
+        SNAP["새 스냅샷 저장<br/>schema-snapshot.json"]
+        LB["MySQL DDL SQL 출력<br/>(현재 MySQL 대응)"]
+    end
+
+    PREV --> DIFF
+    CURR --> DIFF
+
+    DIFF --> TD & CD & IDX & FK
+
+    TD & CD & IDX & FK --> DDL
+
+    DDL --> ROLL
+    DDL --> SNAP
+    DDL --> LB
+
+    style INPUT fill:#e3f2fd
+    style DIFF fill:#fff3e0
+    style OUTPUT fill:#e8f5e9
+    style DDL fill:#ffb74d,color:#000

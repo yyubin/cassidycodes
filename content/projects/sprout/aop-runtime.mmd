@@ -1,0 +1,61 @@
+sequenceDiagram
+    participant Client as 클라이언트
+    participant Proxy as UserService<br/>(프록시)
+    participant INT as BeanMethodInterceptor
+    participant INV as MethodInvocation
+    participant ADV1 as AroundAdvice<br/>(로깅)
+    participant ADV2 as BeforeAdvice<br/>(트랜잭션)
+    participant Target as UserService<br/>(실제 객체)
+
+    Client->>Proxy: saveUser(user)
+
+    Note over Proxy,INT: 1️⃣ 프록시 진입
+
+    Proxy->>INT: intercept(obj, method, args)
+
+    INT->>INT: AdvisorRegistry에서<br/>적용 가능한 Advisor 목록 조회
+
+    alt Advisor 없음
+        INT->>Target: 원본 메서드 직접 호출
+        Target-->>Client: 결과 반환
+    else Advisor 있음
+        Note over INT,INV: 2️⃣ MethodInvocation 생성
+
+        INT->>INV: new MethodInvocation<br/>(target, method, args, advisors)
+
+        Note over INV,ADV1: 3️⃣ Advice 체인 실행
+
+        INV->>INV: proceed() 호출
+        INV->>ADV1: invoke(invocation)
+
+        Note over ADV1: Around: 실행 전 로직
+
+        ADV1->>ADV1: long start = now()
+        ADV1->>INV: invocation.proceed()
+
+        INV->>INV: currentAdvisorIndex++
+        INV->>ADV2: invoke(invocation)
+
+        Note over ADV2: Before: 사전 로직
+
+        ADV2->>ADV2: logBefore(joinPoint)
+        ADV2->>INV: invocation.proceed()
+
+        Note over INV,Target: 4️⃣ 실제 메서드 실행
+
+        INV->>Target: saveUser(user)
+        Target-->>INV: 결과
+
+        Note over ADV2: Before: 사후 처리 없음
+
+        INV-->>ADV1: 결과
+
+        Note over ADV1: Around: 실행 후 로직
+
+        ADV1->>ADV1: long elapsed = now() - start
+        ADV1->>ADV1: log("Elapsed: " + elapsed)
+        ADV1-->>INT: 결과
+
+        INT-->>Proxy: 결과
+        Proxy-->>Client: 최종 결과
+    end

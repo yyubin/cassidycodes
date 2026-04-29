@@ -1,0 +1,51 @@
+flowchart TB
+    START[SproutApplication.run]
+    CONTEXT[ApplicationContext 생성]
+    REFRESH[refresh 시작]
+
+    subgraph SCAN["1️⃣ 컴포넌트 스캔"]
+        R1[Reflections 라이브러리로<br/>@Component 등 스캔]
+        R2[BeanDefinition 생성]
+        R3[BeanGraph 구축<br/>위상 정렬]
+    end
+
+    subgraph PHASES["2️⃣ 생명주기 Phase 실행"]
+        P1[Infrastructure Bean<br/>order=100]
+        P2[BeanPostProcessor 등록<br/>order=200]
+        P3[Application Bean<br/>order=300]
+        P4[ContextInitializer<br/>order=400]
+    end
+
+    subgraph DETAIL["빈 생성 상세"]
+        D1{Strategy 선택}
+        D2[Constructor 기반]
+        D3[FactoryMethod 기반]
+        D4[DependencyResolver<br/>의존성 주입]
+        D5[BeanPostProcessor<br/>후처리]
+    end
+
+    START --> CONTEXT
+    CONTEXT --> REFRESH
+    REFRESH --> SCAN
+
+    R1 --> R2
+    R2 --> R3
+
+    SCAN --> PHASES
+
+    P1 --> P2
+    P2 --> P3
+    P3 --> P4
+
+    P3 -.빈 생성.-> DETAIL
+
+    D1 --|Component|--> D2
+    D1 --|Bean method|--> D3
+    D2 --> D4
+    D3 --> D4
+    D4 --> D5
+
+    style SCAN fill:#e3f2fd
+    style PHASES fill:#fff3e0
+    style DETAIL fill:#f3e5f5
+    style P3 fill:#ffb74d,color:#000

@@ -1,0 +1,31 @@
+flowchart TB
+    subgraph IO["I/O Thread (Event Loop)"]
+        SEL[Selector]
+        ACCEPT[OP_ACCEPT<br/>연결 수락]
+        READ[OP_READ<br/>데이터 읽기]
+        WRITE[OP_WRITE<br/>응답 전송]
+    end
+
+    subgraph WORKER["Worker Thread Pool"]
+        VT[Virtual Threads /<br/>Platform Threads]
+        PARSE[요청 파싱]
+        DISPATCH[디스패처]
+        CTRL[컨트롤러 실행]
+        RESP[응답 생성]
+    end
+
+    SEL --> ACCEPT
+    SEL --> READ
+    SEL --> WRITE
+
+    READ -.비동기 제출.-> VT
+    VT --> PARSE
+    PARSE --> DISPATCH
+    DISPATCH --> CTRL
+    CTRL --> RESP
+    RESP -.완료 알림.-> WRITE
+
+    style IO fill:#e1f5ff
+    style WORKER fill:#fff4e1
+    style SEL fill:#4fc3f7,color:#000
+    style VT fill:#ffb74d,color:#000

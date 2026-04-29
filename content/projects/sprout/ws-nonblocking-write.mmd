@@ -1,0 +1,35 @@
+sequenceDiagram
+    participant APP as 애플리케이션
+    participant SE as WebSocketSession
+    participant Q as pendingWrites Queue
+    participant SEL as NIO Selector
+    participant CH as SocketChannel
+
+    APP->>SE: sendText("메시지")
+    SE->>SE: frameEncoder.encodeText()<br/>WebSocket 프레임 생성
+
+    Note over SE,Q: scheduleWrite() 즉시 반환
+    SE->>Q: pendingWrites.add(buf)
+    SE->>SEL: OP_WRITE 등록 + selector.wakeup()
+    SE-->>APP: 반환 완료 (블로킹 없음)
+
+    Note over SEL: OP_WRITE 이벤트 발생
+    SEL->>SE: write(SelectionKey)
+
+    loop pendingWrites 소진까지
+        SE->>CH: channel.write(buf)
+        alt 소켓 버퍼 가득 참 (백프레셔)
+            CH-->>SE: 일부만 전송 buf.hasRemaining = true
+            SE-->>SEL: 다음 OP_WRITE까지 대기
+        else 버퍼 전송 완료
+            SE->>Q: pendingWrites.poll()
+        end
+    end
+
+    Note over SE,SEL: 큐 비워짐
+    SE->>SEL: OP_WRITE 관심 해제
+
+    alt isClosePending == true
+        SE->>CH: channel.close()
+        SE->>SE: OnClose 호출
+    end
