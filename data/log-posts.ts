@@ -146,4 +146,13 @@ export const logPosts: LogPost[] = [
     slug: "java-intro-2.md",
     contentPath: "/content/logs/java-intro-2.md",
   },
+  {
+    id: "16",
+    title: "☕Java — 배열, 이차원 배열, 정렬",
+    subtitle: "",
+    date: "2026-05-01T16:29:00",
+    tags: ["java"],
+    slug: "java-intro-3.md",
+    contentPath: "/content/logs/java-intro-3.md",
+  },
 ];
