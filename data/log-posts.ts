@@ -134,7 +134,7 @@ export const logPosts: LogPost[] = [
     subtitle: "Java 실행환경, 컴파일 과정, 메모리 구조, 기본형/참조형",
     date: "2026-04-28T17:17:00",
     tags: ["java"],
-    slug: "java-intro-1.md",
+    slug: "java-intro-1",
     contentPath: "/content/logs/java-intro-1.md",
   },
   {
@@ -143,7 +143,7 @@ export const logPosts: LogPost[] = [
     subtitle: "",
     date: "2026-04-29T19:00:00",
     tags: ["java"],
-    slug: "java-intro-2.md",
+    slug: "java-intro-2",
     contentPath: "/content/logs/java-intro-2.md",
   },
   {
@@ -152,7 +152,16 @@ export const logPosts: LogPost[] = [
     subtitle: "",
     date: "2026-05-01T16:29:00",
     tags: ["java"],
-    slug: "java-intro-3.md",
+    slug: "java-intro-3",
     contentPath: "/content/logs/java-intro-3.md",
+  },
+  {
+    id: "17",
+    title: "☕Java — 클래스, 객체, 생성자",
+    subtitle: "",
+    date: "2026-05-04T17:37:00",
+    tags: ["java"],
+    slug: "java-intro-4",
+    contentPath: "/content/logs/java-intro-4.md",
   },
 ];
