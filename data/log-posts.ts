@@ -164,4 +164,13 @@ export const logPosts: LogPost[] = [
     slug: "java-intro-4",
     contentPath: "/content/logs/java-intro-4.md",
   },
+  {
+    id: "18",
+    title: "☕Java — 필드, static, final, 객체 배열",
+    subtitle: "",
+    date: "2026-05-06T17:37:00",
+    tags: ["java"],
+    slug: "java-intro-5",
+    contentPath: "/content/logs/java-intro-5.md",
+  },
 ];
