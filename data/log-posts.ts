@@ -173,4 +173,13 @@ export const logPosts: LogPost[] = [
     slug: "java-intro-5",
     contentPath: "/content/logs/java-intro-5.md",
   },
+  {
+    id: "19",
+    title: "☕Java — 상속, 다형성",
+    subtitle: "",
+    date: "2026-05-07T17:38:00",
+    tags: ["java"],
+    slug: "java-intro-6",
+    contentPath: "/content/logs/java-intro-6.md",
+  },
 ];
