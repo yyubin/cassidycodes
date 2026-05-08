@@ -46,3 +46,16 @@ body {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
 }
+
+/* ── Mermaid dark mode ───────────────────────────────────────────── */
+
+/* 엣지 라벨 박스 배경 */
+.dark .mermaid-container .edgeLabel rect {
+  fill: #1e293b !important;
+  stroke: none !important;
+}
+
+/* SVG 루트 배경 (theme: dark 의 #1f2020 제거) */
+.dark .mermaid-container svg {
+  background: transparent !important;
+}
