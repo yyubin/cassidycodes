@@ -1,0 +1,48 @@
+flowchart LR
+    subgraph CPU["CpuAnalyzer"]
+        C1["maxUser > 80%<br/>& avgUser > 80%"]
+        C2["maxUser > 80%<br/>& avgUser ≤ 80%"]
+        C3["상위 1위 메서드<br/>점유율 > 20%"]
+    end
+
+    subgraph GC["GcAnalyzer"]
+        G1["maxPause ≥ 500ms"]
+        G2["maxPause ≥ 200ms"]
+        G3["STW / 녹화 시간<br/>> 5%"]
+    end
+
+    subgraph MEM["MemoryAnalyzer"]
+        M1["maxHeap / committed<br/>> 85%"]
+        M2["최다 할당 클래스<br/>총량 > 100MB"]
+    end
+
+    subgraph THR["ThreadAnalyzer"]
+        T1["totalContention<br/>> 5,000ms"]
+        T2["totalContention<br/>> 1,000ms"]
+        T3["100ms 이상<br/>대기 이벤트 존재"]
+    end
+
+    CRIT["CRITICAL"]
+    WARN["WARNING"]
+    INFO["INFO"]
+
+    C1 --> CRIT
+    G1 --> CRIT
+    T1 --> CRIT
+
+    C2 --> WARN
+    C3 --> WARN
+    G2 --> WARN
+    G3 --> WARN
+    M1 --> WARN
+    T2 --> WARN
+
+    M2 --> INFO
+    T3 --> INFO
+
+    CRIT & WARN & INFO --> F["Finding<br/>category + title<br/>description + recommendation"]
+
+    style CRIT fill:#ef9a9a,color:#000
+    style WARN fill:#ffcc80,color:#000
+    style INFO fill:#b3e5fc,color:#000
+    style F fill:#e8f5e9

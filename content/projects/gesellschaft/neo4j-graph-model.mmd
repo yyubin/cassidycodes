@@ -1,0 +1,28 @@
+flowchart LR
+    P["Persona<br/>name, grade<br/>res_slash/pierce/blunt<br/>min/max_speed<br/>base_health, growth_rate"]
+    SK["Skill<br/>name, category<br/>sin, attack_type<br/>base_power, coin_power<br/>coin_count, weight"]
+    CO["Coin<br/>number, type"]
+    PA["Passive<br/>name, kind<br/>condition_type<br/>condition_sin"]
+    EFF["Effect<br/>name"]
+    TRG["Trigger<br/>type"]
+    ACT["Action<br/>type, target<br/>stat, value"]
+    SIN["SinAffinity<br/>type (WRATH/LUST/...)"]
+    STATUS["StatusEffect<br/>type (BLEED/RUPTURE/...)"]
+
+    P -->|"HAS_SKILL"| SK
+    P -->|"HAS_PASSIVE"| PA
+    SK -->|"HAS_COIN"| CO
+    SK -->|"USES_SIN"| SIN
+    SK -->|"HAS_KEYWORD"| STATUS
+    SK -->|"HAS_EFFECT"| EFF
+    CO -->|"HAS_EFFECT"| EFF
+    PA -->|"HAS_EFFECT"| EFF
+    PA -->|"REQUIRES_SIN"| SIN
+    EFF -->|"TRIGGERS_ON"| TRG
+    EFF -->|"PERFORMS"| ACT
+    ACT -->|"APPLIES"| STATUS
+
+    style P fill:#ffcc80,color:#000
+    style EFF fill:#a5d6a7,color:#000
+    style SIN fill:#b3e5fc,color:#000
+    style STATUS fill:#b3e5fc,color:#000

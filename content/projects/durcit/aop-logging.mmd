@@ -1,0 +1,28 @@
+flowchart TD
+    REQ["HTTP 요청"]
+
+    subgraph FILTER["서블릿 필터"]
+        CACHED["CachedBodyHttpServletRequest<br/>요청 바디를 바이트 배열로 캐싱<br/>(이후 다중 읽기 허용)"]
+    end
+
+    subgraph AOP["ApiLoggingAspect (@Around)"]
+        EXTRACT["요청 정보 추출<br/>memberId · endpoint · method<br/>controller · payload"]
+        SKIP{"EmojiController<br/>ChatController<br/>?"}
+        EXEC["실제 컨트롤러 실행<br/>proceedingJoinPoint.proceed()"]
+        RESP["응답 정보 추출<br/>status code · response body"]
+        SAVE["LogRepository.save()<br/>DB 활동 로그 저장"]
+    end
+
+    ADMINDASH["관리자 대시보드<br/>활동 로그 조회"]
+
+    REQ --> CACHED
+    CACHED --> AOP
+    EXTRACT --> SKIP
+    SKIP -->|"제외"| EXEC
+    SKIP -->|"계속"| EXEC
+    EXEC --> RESP --> SAVE
+    SAVE --> ADMINDASH
+
+    style CACHED fill:#fff3e0
+    style AOP fill:#f3e5f5
+    style SAVE fill:#c8e6c9,color:#000

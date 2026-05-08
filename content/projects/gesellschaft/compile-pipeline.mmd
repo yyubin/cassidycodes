@@ -1,0 +1,29 @@
+flowchart TD
+    subgraph WAY1["방식 1 — DSL 직접 컴파일"]
+        LPDL[".lpdl 파일<br/>(선언적 게임 데이터 기술)"]
+    end
+
+    subgraph WAY2["방식 2 — 자연어 컴파일"]
+        NL["자연어 설명"]
+        LLM["LLM (GPT-4)<br/>자연어 → LPDL 변환<br/>구문 오류 시 피드백 자동 재시도"]
+        LPDL2[".lpdl 중간 파일<br/>(--save-lpdl 옵션)"]
+        NL --> LLM --> LPDL2
+    end
+
+    ANTLR["ANTLR 4 Parser<br/>문법 검증 & AST 생성"]
+    VISITOR["Visitor 패턴<br/>AST 순회 & 코드 생성"]
+
+    SQL["output.sql<br/>MySQL INSERT 문<br/>AUTO_INCREMENT + FK 자동 처리"]
+    CYPHER["output.cypher<br/>Neo4j Cypher<br/>CREATE / MERGE / SET<br/>공유 노드 MERGE 최적화"]
+
+    LPDL --> ANTLR
+    LPDL2 --> ANTLR
+    ANTLR --> VISITOR
+    VISITOR --> SQL
+    VISITOR --> CYPHER
+
+    style WAY1 fill:#e3f2fd
+    style WAY2 fill:#e8f5e9
+    style ANTLR fill:#fff3e0
+    style SQL fill:#ffe0b2,color:#000
+    style CYPHER fill:#e1bee7,color:#000

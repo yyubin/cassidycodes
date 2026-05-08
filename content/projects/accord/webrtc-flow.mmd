@@ -1,0 +1,29 @@
+sequenceDiagram
+    participant A as 피어 A
+    participant SIG as 시그널링 서버
+    participant STUN as STUN 서버
+    participant TURN as TURN 서버
+    participant B as 피어 B
+
+    A->>SIG: subscribe(roomId)
+    B->>SIG: subscribe(roomId)
+
+    Note over A,B: ICE Candidate 수집
+    A->>STUN: Binding Request (UDP)
+    STUN-->>A: XOR-MAPPED-ADDRESS 응답 (공인 IP:Port 반환)
+
+    Note over A,B: Offer / Answer 교환
+    A->>SIG: publish → offer + ICE candidates
+    SIG-->>B: forward (topic broadcast)
+    B->>SIG: publish → answer + ICE candidates
+    SIG-->>A: forward (topic broadcast)
+
+    alt P2P 직접 연결 성공
+        A->>B: 직접 미디어 스트림
+        B-->>A: 직접 미디어 스트림
+    else NAT 통과 실패 → TURN 릴레이
+        A->>TURN: 릴레이
+        TURN->>B: 릴레이
+        B-->>TURN: 릴레이
+        TURN-->>A: 릴레이
+    end

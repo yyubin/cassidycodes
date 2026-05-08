@@ -1,0 +1,31 @@
+flowchart TD
+    subgraph CLIENT["클라이언트"]
+        REACT["React.js + Tailwind CSS<br/>durcit.site"]
+        ADMINDASH["관리자 대시보드<br/>admin.durcit.site"]
+    end
+
+    NGINX["Nginx (리버스 프록시)<br/>AWS EC2"]
+
+    subgraph SPRING["Spring Boot 3.4 (Java 21)"]
+        SEC["Spring Security<br/>JWT Filter → 역할 기반 접근 제어<br/>OAuth2 소셜 로그인"]
+        API["REST API<br/>게시글 · 댓글 · 팔로우 · 검색 · 프로필"]
+        WS["WebSocket / STOMP<br/>실시간 채팅"]
+        AOP["AOP 로깅<br/>ApiLoggingAspect<br/>CachedBodyHttpServletRequest"]
+        PUSH_SVC["푸시 알림 서비스<br/>팔로우 · 댓글 · 채팅 알림"]
+    end
+
+    MQ["RabbitMQ<br/>채팅 메시지 브로커"]
+    DB["MySQL<br/>(AWS RDS)"]
+    S3["AWS S3<br/>이미지 · 미디어"]
+
+    REACT & ADMINDASH --> NGINX
+    NGINX --> SPRING
+    WS <-->|"STOMP"| MQ
+    SPRING --> DB
+    SPRING --> S3
+    AOP -.->|"활동 로그 저장"| DB
+    PUSH_SVC -.->|"알림 저장"| DB
+
+    style SPRING fill:#e3f2fd
+    style MQ fill:#fff3e0
+    style AOP fill:#f3e5f5

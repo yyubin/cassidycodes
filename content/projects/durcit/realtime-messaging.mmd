@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant A as 클라이언트 A
+    participant WS as WebSocket<br/>(STOMP)
+    participant MQ as RabbitMQ
+    participant B as 클라이언트 B
+    participant DB as MySQL
+
+    A->>WS: CONNECT (Authorization: Bearer JWT)
+    B->>WS: CONNECT (Authorization: Bearer JWT)
+    A->>WS: SUBSCRIBE /topic/chatroom.{roomId}
+    B->>WS: SUBSCRIBE /topic/chatroom.{roomId}
+
+    Note over A,DB: 메시지 전송
+    A->>WS: SEND /app/chat.message {content}
+    WS->>DB: ChatMessage 저장
+    WS->>MQ: publish → chatroom.{roomId} exchange
+    MQ-->>WS: consume (AMQP)
+    WS-->>A: broadcast (STOMP)
+    WS-->>B: broadcast (STOMP)
+
+    Note over DB: 오프라인 사용자 푸시 알림
+    WS->>DB: INSERT push<br/>(type=CHAT, memberId, content)
