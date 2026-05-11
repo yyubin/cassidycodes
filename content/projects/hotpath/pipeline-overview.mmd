@@ -1,0 +1,44 @@
+flowchart TD
+    JFR[".jfr 파일"]
+
+    subgraph S1["① JFR 파싱"]
+        RF["RecordingFile<br/>readEvent() 스트리밍"]
+        ER["EventRouter<br/>타입명 → 핸들러 분기"]
+        MH[MetaHandler]
+        CH[CpuHandler]
+        GH[GcHandler]
+        MEH[MemoryHandler]
+        TH[ThreadHandler]
+    end
+
+    subgraph S2["② Analyzers"]
+        CA["CpuAnalyzer<br/>→ CpuSummary + Findings"]
+        GA["GcAnalyzer<br/>→ GcSummary + Findings"]
+        MA["MemoryAnalyzer<br/>→ MemorySummary + Findings"]
+        TA["ThreadAnalyzer<br/>→ ThreadSummary + Findings"]
+    end
+
+    S3["③ TimelineBuilder<br/>raw 샘플 → 1초 단위 TimeBucket"]
+
+    subgraph S4["④ HtmlRenderer"]
+        AR["AnalysisResult 조합"]
+        JSON["Jackson → JSON 직렬화<br/>(ISO-8601 타임스탬프)"]
+        HTML["template.replace 치환<br/>→ report.html"]
+    end
+
+    JFR --> RF --> ER
+    ER --> MH & CH & GH & MEH & TH
+    CH --> CA
+    GH --> GA
+    MEH --> MA
+    TH --> TA
+    CH & GH & MEH & TH --> S3
+    CA & GA & MA & TA --> AR
+    S3 --> AR
+    AR --> JSON --> HTML
+
+    style S1 fill:#e3f2fd
+    style S2 fill:#e8f5e9
+    style S3 fill:#f3e5f5
+    style S4 fill:#fff3e0
+    style HTML fill:#ffcc80,color:#000

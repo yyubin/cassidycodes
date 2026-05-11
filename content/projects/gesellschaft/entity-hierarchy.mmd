@@ -1,0 +1,43 @@
+flowchart TD
+    S["SinnerJpa<br/>(12명의 고정 시너)"]
+    P["PersonaJpa<br/>★ Aggregate Root<br/>내성·속도·체력·시즌 Embedded"]
+
+    IMG["PersonaImageJpa"]
+    PASS["PersonaPassiveJpa<br/>조건 필드 평탄화"]
+    SK["SkillJpa"]
+
+    PEFF["PassiveEffectJpa<br/>triggerJson"]
+    SS["SkillStatsBySyncJpa<br/>동기화 레벨별 스탯"]
+    SE["SkillEffectJpa<br/>triggerJson"]
+    SC["SkillCoinJpa"]
+    CE["CoinEffectJpa<br/>triggerJson"]
+
+    EB["EffectBranchJpa<br/>stopOnMatch (대신 효과)"]
+    EA["EffectActionJpa<br/>amountJson / targetSelectorJson"]
+
+    subgraph COND["조건 시스템 (JOINED 상속)"]
+        AC["AbstractConditionJpa (추상)"]
+        CG["ConditionGroupJpa<br/>AND / OR 재귀 트리"]
+        STC["StatConditionJpa<br/>스탯 비교 (리프)"]
+        RC["RangeConditionJpa<br/>범위 조건 (리프)"]
+        AC --> CG & STC & RC
+        CG -->|"children (재귀)"| AC
+    end
+
+    S -->|"1:N"| P
+    P -->|"1:N"| IMG
+    P -->|"1:N"| PASS
+    P -->|"1:N"| SK
+    PASS -->|"1:1"| PEFF
+    SK -->|"1:N"| SS
+    SS -->|"1:N"| SE
+    SS -->|"1:N"| SC
+    SC -->|"1:N"| CE
+    PEFF & SE & CE -->|"rootCondition"| CG
+    PEFF & SE & CE -->|"1:N branches"| EB
+    EB -->|"condition"| CG
+    EB -->|"1:N"| EA
+
+    style P fill:#ffcc80,color:#000
+    style COND fill:#f3e5f5
+    style CG fill:#ce93d8,color:#000

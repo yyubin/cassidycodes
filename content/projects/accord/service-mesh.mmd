@@ -1,0 +1,27 @@
+flowchart LR
+    subgraph DISCOVERY["Consul (서비스 디스커버리 · :8500)"]
+        CR["서비스 레지스트리<br/>헬스체크 · 자동 해제"]
+    end
+
+    subgraph SERVICES["서비스"]
+        GW["API Gateway"]
+        SPRING["Spring Backend<br/>:8080"]
+        GO_SVC["Go Backend<br/>:4000"]
+        SIG["Signaling Server<br/>:4444"]
+    end
+
+    PROM["Prometheus<br/>메트릭 수집"]
+    GRAF["Grafana<br/>대시보드"]
+
+    SPRING -->|"등록 / 10s 헬스체크"| CR
+    GO_SVC -->|"등록 / 10s 헬스체크"| CR
+    SIG -->|"등록 / 10s 헬스체크<br/>SIGINT·SIGTERM 시 자동 해제"| CR
+    GW -->|"서비스 조회 후 라우팅"| CR
+    GW -->|"라우팅"| SPRING
+    GW -->|"라우팅"| GO_SVC
+    PROM --> SPRING & GO_SVC
+    PROM --> GRAF
+
+    style DISCOVERY fill:#f3e5f5
+    style SERVICES fill:#e8f5e9
+    style CR fill:#ce93d8,color:#000

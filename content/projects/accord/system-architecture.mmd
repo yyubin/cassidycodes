@@ -1,0 +1,37 @@
+flowchart TD
+    CLIENT["클라이언트 (React)"]
+
+    subgraph GW_BOX["API Gateway (Spring)"]
+        GW["라우팅 / 인증 검증"]
+        CONSUL_GW["Consul 서비스 조회"]
+    end
+
+    subgraph BACKEND["백엔드 서비스"]
+        SPRING["Spring Boot Backend<br/>팀관리 · 칸반 · 채팅 · 인증 · 조인보드<br/>MariaDB · Redis · RabbitMQ"]
+        GO["Go Backend (Fiber)<br/>노트 · 캔버스 · 오디오 WebSocket<br/>MongoDB · Redis"]
+    end
+
+    subgraph WEBRTC_BOX["WebRTC 인프라"]
+        SIG["Signaling Server (Node.js)<br/>WebSocket pub/sub 토픽 구조<br/>Consul 자동 등록/해제"]
+        STUN["STUN Server (Go + Pion)<br/>UDP :3479<br/>XOR-MAPPED-ADDRESS"]
+        TURN["TURN Server (Go + Pion)<br/>NAT traversal 릴레이"]
+    end
+
+    CONSUL["Consul<br/>서비스 디스커버리<br/>헬스체크"]
+    S3["AWS S3<br/>파일 · 이미지 저장"]
+    MON["Prometheus + Grafana<br/>메트릭 모니터링"]
+
+    CLIENT -->|"REST / WS"| GW_BOX
+    GW_BOX --> SPRING & GO
+    SPRING <-->|"gRPC (키 로테이션)"| GO
+    SPRING & GO & SIG -->|"등록 · 헬스체크"| CONSUL
+    GW_BOX -->|"서비스 조회"| CONSUL
+    SPRING & GO --> S3
+    MON -->|"메트릭 수집"| SPRING & GO
+    CLIENT <-->|"WebSocket"| SIG
+    CLIENT <-->|"UDP"| STUN & TURN
+
+    style GW_BOX fill:#e3f2fd
+    style BACKEND fill:#e8f5e9
+    style WEBRTC_BOX fill:#fff3e0
+    style CONSUL fill:#f3e5f5

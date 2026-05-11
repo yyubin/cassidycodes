@@ -1,0 +1,29 @@
+flowchart LR
+    E1["jdk.JVMInformation"]
+    E2["jdk.CPULoad"]
+    E3["jdk.ExecutionSample"]
+    E4["jdk.GarbageCollection"]
+    E5["jdk.GCHeapSummary<br/>★ 두 핸들러 동시 구독"]
+    E6["jdk.ObjectAllocation*<br/>(InNewTLAB / OutsideTLAB)"]
+    E7["jdk.JavaMonitorEnter"]
+    E8["jdk.JavaThreadStatistics"]
+
+    MH["MetaHandler<br/>JVM 버전·인수·PID"]
+    CH["CpuHandler<br/>CPU 사용률 스냅샷<br/>Hot Methods 카운트 누적"]
+    GH["GcHandler<br/>gcId 키로<br/>Before/After 힙 조합"]
+    MEH["MemoryHandler<br/>힙 사용량 타임라인<br/>클래스별 할당량 누적"]
+    TH["ThreadHandler<br/>Lock 대기 시간<br/>스레드 수 시계열"]
+
+    E1 --> MH
+    E2 --> CH
+    E3 --> CH
+    E4 --> GH
+    E5 --> GH
+    E5 --> MEH
+    E6 --> MEH
+    E7 --> TH
+    E8 --> TH
+
+    style E5 fill:#ffcc80,color:#000
+    style GH fill:#c8e6c9,color:#000
+    style MEH fill:#c8e6c9,color:#000
