@@ -182,4 +182,13 @@ export const logPosts: LogPost[] = [
     slug: "java-intro-6",
     contentPath: "/content/logs/java-intro-6.md",
   },
+  {
+    id: "20",
+    title: "☕Java — 예외처리, IO",
+    subtitle: "",
+    date: "2026-05-12T17:38:00",
+    tags: ["java"],
+    slug: "java-intro-7",
+    contentPath: "/content/logs/java-intro-7.md",
+  },
 ];
