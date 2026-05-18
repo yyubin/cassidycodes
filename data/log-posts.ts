@@ -191,4 +191,22 @@ export const logPosts: LogPost[] = [
     slug: "java-intro-7",
     contentPath: "/content/logs/java-intro-7.md",
   },
+  {
+    id: "21",
+    title: "☕Java — IO, Enum, Lambda, Stream",
+    subtitle: "",
+    date: "2026-05-13T17:38:00",
+    tags: ["java"],
+    slug: "java-io-to-stream",
+    contentPath: "/content/logs/java-io-to-stream.md",
+  },
+  {
+    id: "24",
+    title: "☕Java — JDBC, PreparedStatement",
+    subtitle: "",
+    date: "2026-05-18T15:59:00",
+    tags: ["java"],
+    slug: "java-jdbc",
+    contentPath: "/content/logs/java-jdbc.md",
+  },  
 ];
