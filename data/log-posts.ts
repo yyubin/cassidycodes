@@ -227,4 +227,22 @@ export const logPosts: LogPost[] = [
     slug: "java-jdbc",
     contentPath: "/content/logs/java-jdbc.md",
   },  
+   {
+    id: "25",
+    title: "Servlet request-response cycle",
+    subtitle: "",
+    date: "2026-05-20T16:59:00",
+    tags: [],
+    slug: "servlet-1",
+    contentPath: "/content/logs/servlet-1.md",
+  },  
+  {
+    id: "26",
+    title: "Servlet json/jdbc/front",
+    subtitle: "",
+    date: "2026-05-21T16:59:00",
+    tags: [],
+    slug: "servlet-2",
+    contentPath: "/content/logs/servlet-2.md",
+  },     
 ];
