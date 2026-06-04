@@ -244,5 +244,14 @@ export const logPosts: LogPost[] = [
     tags: [],
     slug: "servlet-2",
     contentPath: "/content/logs/servlet-2.md",
-  },     
+  },   
+  {
+    id: "34",
+    title: "SQL Mapper Framework — MyBatis",
+    subtitle: "",
+    date: "2026-06-04T16:37:00",
+    tags: [],
+    slug: "mybatis",
+    contentPath: "/content/logs/mybatis.md",    
+  }  
 ];
