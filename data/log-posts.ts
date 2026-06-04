@@ -150,7 +150,7 @@ export const logPosts: LogPost[] = [
     id: "16",
     title: "☕Java — 배열, 이차원 배열, 정렬",
     subtitle: "",
-    date: "2026-05-01T16:29:00",
+    date: "2026-05-01T17:45:00",
     tags: ["java"],
     slug: "java-intro-3",
     contentPath: "/content/logs/java-intro-3.md",

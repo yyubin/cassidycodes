@@ -18,5 +18,14 @@ export const reflectionPosts: Reflection[] = [
         tags: ['jinx', 'schema matching', 'rename'],
         slug: "jinx-dispose-rename",
         contentPath: '/content/reflections/jinx-dispose-rename.md'
-    }    
+    },
+    {
+        id: "3",
+        title: "스프링 두 번 만들기를 두 번 하는 청년",
+        subtitle: "인사 담당자 열람 금지",
+        date: "2026-05-30T01:01:00",
+        tags: ['spring', 'reflection', 'java'],
+        slug: "fitory-servlet-backend",
+        contentPath: '/content/reflections/fitory-servlet-backend.md'
+    }
 ];
