@@ -253,5 +253,14 @@ export const logPosts: LogPost[] = [
     tags: [],
     slug: "mybatis",
     contentPath: "/content/logs/mybatis.md",    
-  }  
+  },
+  {
+    id: "35",
+    title: "MyBatis Dynamic Query",
+    subtitle: "",
+    date: "2026-06-08T17:42:00",
+    tags: [],
+    slug: "mybatis-dynamic-query",
+    contentPath: "/content/logs/mybatis-dynamic-query.md",    
+  }    
 ];
