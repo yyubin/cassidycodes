@@ -1,4 +1,4 @@
-import { LogPost } from "@/types/log";
+﻿import { LogPost } from "@/types/log";
 
 export const logPosts: LogPost[] = [
   {
@@ -246,6 +246,69 @@ export const logPosts: LogPost[] = [
     contentPath: "/content/logs/servlet-2.md",
   },   
   {
+    id: "27",
+    title: "Servlet 상태 관리 — Cookie와 Session",
+    subtitle: "로그인 상태 유지와 JSESSIONID 흐름",
+    date: "2026-05-22T17:20:00",
+    tags: ["servlet", "session", "cookie"],
+    slug: "servlet-state-management",
+    contentPath: "/content/logs/servlet-state-management.md",
+  },
+  {
+    id: "28",
+    title: "Spring Bean 설정과 DI 기초",
+    subtitle: "XML, Java Config, Component Scan 비교",
+    date: "2026-05-26T17:20:00",
+    tags: ["spring", "di"],
+    slug: "spring-bean-di",
+    contentPath: "/content/logs/spring-bean-di.md",
+  },
+  {
+    id: "29",
+    title: "Spring DI — Primary, Qualifier, Collection 주입",
+    subtitle: "같은 타입 Bean이 여러 개일 때의 선택 전략",
+    date: "2026-05-27T17:20:00",
+    tags: ["spring", "di"],
+    slug: "spring-di-qualifier",
+    contentPath: "/content/logs/spring-di-qualifier.md",
+  },
+  {
+    id: "30",
+    title: "Spring AOP",
+    subtitle: "공통 관심사 분리와 Advice, Pointcut",
+    date: "2026-05-28T17:20:00",
+    tags: ["spring", "aop"],
+    slug: "spring-aop",
+    contentPath: "/content/logs/spring-aop.md",
+  },
+  {
+    id: "31",
+    title: "Jackson과 JSON 처리",
+    subtitle: "ObjectMapper, DTO, 날짜 포맷 정리",
+    date: "2026-05-29T17:20:00",
+    tags: ["spring", "json", "jackson"],
+    slug: "jackson-json",
+    contentPath: "/content/logs/jackson-json.md",
+  },
+  {
+    id: "32",
+    title: "Spring Exception Handler",
+    subtitle: "API 예외 응답을 JSON으로 통일하기",
+    date: "2026-06-01T17:20:00",
+    tags: ["spring", "exception"],
+    slug: "spring-exception-handler",
+    contentPath: "/content/logs/spring-exception-handler.md",
+  },
+  {
+    id: "33",
+    title: "Spring MVC Interceptor",
+    subtitle: "요청 전후 공통 처리와 API Key 검증",
+    date: "2026-06-02T17:20:00",
+    tags: ["spring", "interceptor"],
+    slug: "spring-interceptor",
+    contentPath: "/content/logs/spring-interceptor.md",
+  },  
+  {
     id: "34",
     title: "SQL Mapper Framework — MyBatis",
     subtitle: "",
@@ -262,5 +325,71 @@ export const logPosts: LogPost[] = [
     tags: [],
     slug: "mybatis-dynamic-query",
     contentPath: "/content/logs/mybatis-dynamic-query.md",    
-  }    
+  },
+  {
+    id: "36",
+    title: "Spring Boot와 MyBatis 통합",
+    subtitle: "Mapper 인터페이스와 XML SQL 연결",
+    date: "2026-06-09T17:20:00",
+    tags: ["springboot", "mybatis"],
+    slug: "springboot-mybatis",
+    contentPath: "/content/logs/springboot-mybatis.md",
+  },
+  {
+    id: "37",
+    title: "JPA 영속성 컨텍스트",
+    subtitle: "EntityManager, 1차 캐시, 변경 감지",
+    date: "2026-06-10T17:20:00",
+    tags: ["jpa"],
+    slug: "jpa-persistence-context",
+    contentPath: "/content/logs/jpa-persistence-context.md",
+  },
+  {
+    id: "38",
+    title: "JPA 엔티티 매핑",
+    subtitle: "Entity, Column, Embedded Type 정리",
+    date: "2026-06-11T17:20:00",
+    tags: ["jpa"],
+    slug: "jpa-entity-mapping",
+    contentPath: "/content/logs/jpa-entity-mapping.md",
+  },
+  {
+    id: "39",
+    title: "JPA 연관 관계 매핑",
+    subtitle: "ManyToOne, OneToMany, Fetch 전략",
+    date: "2026-06-12T17:20:00",
+    tags: ["jpa"],
+    slug: "jpa-association-mapping",
+    contentPath: "/content/logs/jpa-association-mapping.md",
+  },
+  {
+    id: "40",
+    title: "JPQL 기초",
+    subtitle: "Entity 중심 조회와 파라미터 바인딩",
+    date: "2026-06-15T17:20:00",
+    tags: ["jpa", "jpql"],
+    slug: "jpa-jpql",
+    contentPath: "/content/logs/jpa-jpql.md",
+  },
+  {
+    id: "41",
+    title: "JPQL Join과 Native Query",
+    subtitle: "fetch join, N+1, DB 전용 SQL 사용 기준",
+    date: "2026-06-16T17:20:00",
+    tags: ["jpa", "jpql"],
+    slug: "jpa-jpql-join-native",
+    contentPath: "/content/logs/jpa-jpql-join-native.md",
+  },
+  {
+    id: "42",
+    title: "Spring Data JPA",
+    subtitle: "JpaRepository, 쿼리 메서드, 페이징",
+    date: "2026-06-17T17:20:00",
+    tags: ["spring", "jpa"],
+    slug: "spring-data-jpa",
+    contentPath: "/content/logs/spring-data-jpa.md",
+  }
 ];
+
+
+
