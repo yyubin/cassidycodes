@@ -1,7 +1,4 @@
-import { tilPosts } from "@/data/til-posts";
-import { articlePosts } from "@/data/article-posts";
-import { reflectionPosts } from "@/data/reflection-posts";
-import { logPosts } from "@/data/log-posts";
+import { getAllPosts } from "@/lib/posts";
 
 export interface TagWithCount {
   name: string;
@@ -9,15 +6,9 @@ export interface TagWithCount {
 }
 
 export function getAllTags(): TagWithCount[] {
-  const allPosts = [
-    ...logPosts,
-    ...tilPosts,
-    ...articlePosts,
-    ...reflectionPosts,
-  ];
   const tagMap = new Map<string, number>();
 
-  allPosts.forEach((post) => {
+  getAllPosts().forEach((post) => {
     post.tags.forEach((tag) => {
       tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
     });
@@ -29,38 +20,7 @@ export function getAllTags(): TagWithCount[] {
 }
 
 export function getPostsByTag(tag: string) {
-  // 각 포스트에 타입을 먼저 태깅
-  const taggedLogPosts = logPosts.map((post) => ({
-    ...post,
-    type: "log" as const,
-  }));
-  const taggedTilPosts = tilPosts.map((post) => ({
-    ...post,
-    type: "til" as const,
-  }));
-  const taggedArticlePosts = articlePosts.map((post) => ({
-    ...post,
-    type: "article" as const,
-  }));
-  const taggedReflectionPosts = reflectionPosts.map((post) => ({
-    ...post,
-    type: "reflection" as const,
-  }));
-
-  const allPosts = [
-    ...taggedLogPosts,
-    ...taggedTilPosts,
-    ...taggedArticlePosts,
-    ...taggedReflectionPosts,
-  ];
-
-  return allPosts
-    .filter((post) => post.tags.includes(tag))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .map((post) => ({
-      ...post,
-      href: `/${post.type === "article" ? "articles" : post.type === "reflection" ? "reflections" : "til"}/${post.slug}`,
-    }));
+  return getAllPosts().filter((post) => post.tags.includes(tag));
 }
 
 export function searchPosts(query: string) {
@@ -68,45 +28,15 @@ export function searchPosts(query: string) {
     return [];
   }
 
-  // 각 포스트에 타입을 먼저 태깅
-  const taggedLogPosts = logPosts.map((post) => ({
-    ...post,
-    type: "log" as const,
-  }));
-  const taggedTilPosts = tilPosts.map((post) => ({
-    ...post,
-    type: "til" as const,
-  }));
-  const taggedArticlePosts = articlePosts.map((post) => ({
-    ...post,
-    type: "article" as const,
-  }));
-  const taggedReflectionPosts = reflectionPosts.map((post) => ({
-    ...post,
-    type: "reflection" as const,
-  }));
-
-  const allPosts = [
-    ...taggedLogPosts,
-    ...taggedTilPosts,
-    ...taggedArticlePosts,
-    ...taggedReflectionPosts,
-  ];
   const lowerQuery = query.toLowerCase();
 
-  return allPosts
-    .filter((post) => {
-      const matchTitle = post.title.toLowerCase().includes(lowerQuery);
-      const matchSubtitle = post.subtitle.toLowerCase().includes(lowerQuery);
-      const matchTags = post.tags.some((tag) =>
-        tag.toLowerCase().includes(lowerQuery),
-      );
+  return getAllPosts().filter((post) => {
+    const matchTitle = post.title.toLowerCase().includes(lowerQuery);
+    const matchSubtitle = post.subtitle.toLowerCase().includes(lowerQuery);
+    const matchTags = post.tags.some((tag) =>
+      tag.toLowerCase().includes(lowerQuery),
+    );
 
-      return matchTitle || matchSubtitle || matchTags;
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .map((post) => ({
-      ...post,
-      href: `/${post.type === "article" ? "articles" : post.type === "reflection" ? "reflections" : "til"}/${post.slug}`,
-    }));
+    return matchTitle || matchSubtitle || matchTags;
+  });
 }

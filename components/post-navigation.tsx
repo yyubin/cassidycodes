@@ -12,74 +12,44 @@ interface PostNavigationProps {
 }
 
 export function PostNavigation({ prevPost, nextPost, basePath }: PostNavigationProps) {
-  if (!prevPost && !nextPost) {
-    return null;
-  }
-
   return (
-    <nav className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* 이전글 */}
-        <div className="flex justify-start">
+    <nav className="mt-16 pt-8 border-t border-line space-y-6" aria-label="Post navigation">
+      {(prevPost || nextPost) && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {prevPost ? (
             <Link
               href={`${basePath}/${prevPost.slug}`}
-              className="group flex flex-col p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-cyan-500 dark:hover:border-cyan-400 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all w-full"
+              className="group block p-4 rounded-md border border-line hover:border-muted transition-colors"
             >
-              <span className="text-sm text-gray-500 dark:text-gray-500 mb-1">
-                ← 이전글
-              </span>
-              <span className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 line-clamp-2">
+              <span className="block font-mono text-xs text-muted mb-1">← prev</span>
+              <span className="block text-sm font-medium group-hover:text-accent transition-colors line-clamp-2">
                 {prevPost.title}
               </span>
             </Link>
           ) : (
-            <div className="w-full" />
+            <div className="hidden sm:block" />
           )}
-        </div>
 
-        {/* 다음글 */}
-        <div className="flex justify-end">
-          {nextPost ? (
+          {nextPost && (
             <Link
               href={`${basePath}/${nextPost.slug}`}
-              className="group flex flex-col p-4 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-cyan-500 dark:hover:border-cyan-400 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-all w-full text-right"
+              className="group block p-4 rounded-md border border-line hover:border-muted transition-colors sm:text-right"
             >
-              <span className="text-sm text-gray-500 dark:text-gray-500 mb-1">
-                다음글 →
-              </span>
-              <span className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 line-clamp-2">
+              <span className="block font-mono text-xs text-muted mb-1">next →</span>
+              <span className="block text-sm font-medium group-hover:text-accent transition-colors line-clamp-2">
                 {nextPost.title}
               </span>
             </Link>
-          ) : (
-            <div className="w-full" />
           )}
         </div>
-      </div>
+      )}
 
-      {/* 목록으로 돌아가기 */}
-      <div className="mt-6 text-center">
-        <Link
-          href={basePath}
-          className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-          목록으로 돌아가기
-        </Link>
-      </div>
+      <Link
+        href={basePath}
+        className="inline-block font-mono text-xs text-muted hover:text-accent transition-colors"
+      >
+        ← all {basePath.slice(1)}
+      </Link>
     </nav>
   );
 }

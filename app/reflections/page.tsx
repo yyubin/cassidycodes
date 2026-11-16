@@ -1,81 +1,57 @@
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
-import { PostCard } from '@/components/post-card';
-import { Reflection } from '@/types';
+import type { Metadata } from 'next';
+import { PageShell, PageHeader } from '@/components/page-shell';
+import { PostCard, PostList } from '@/components/post-card';
 import { reflectionPosts } from '@/data/reflection-posts';
+import { sortByDateDesc, toSummary, PostSummary } from '@/lib/posts';
+
+export const metadata: Metadata = {
+  title: 'Reflections',
+};
 
 export default function ReflectionsPage() {
-  // Group reflections by year
-  const groupedByYear = reflectionPosts.reduce((acc, post) => {
-    const year = new Date(post.date).getFullYear();
-    if (!acc[year]) {
-      acc[year] = [];
-    }
-    acc[year].push(post);
-    return acc;
-  }, {} as Record<number, Reflection[]>);
+  const posts = sortByDateDesc(reflectionPosts.map((p) => toSummary(p, 'reflection')));
 
-  // Sort years in descending order
-  const yearSections = Object.keys(groupedByYear)
-    .map(Number)
-    .sort((a, b) => b - a)
-    .map((year) => ({
-      year,
-      reflections: groupedByYear[year].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      ),
-    }));
+  // 연도별 그룹 (posts가 이미 최신순이라 그룹 순서도 최신순)
+  const yearSections = posts.reduce<{ year: string; posts: PostSummary[] }[]>((acc, post) => {
+    const year = post.date.slice(0, 4);
+    const last = acc[acc.length - 1];
+    if (last && last.year === year) {
+      last.posts.push(post);
+    } else {
+      acc.push({ year, posts: [post] });
+    }
+    return acc;
+  }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors">
-      <Header />
+    <PageShell>
+      <PageHeader
+        label="reflections"
+        title="Reflections"
+        description="프로젝트 회고"
+        meta={`${posts.length} posts`}
+      />
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <div className="space-y-12">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
-              Reflections
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-            
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-500">
-              Total {reflectionPosts.length} posts
-            </p>
-          </div>
-
-          {yearSections.map((section) => (
-            <div key={section.year} className="space-y-6">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-800 pb-3">
-                {section.year}
-              </h2>
-
-              <div className="space-y-4">
-                {section.reflections.length > 0 ? (
-                  section.reflections.map((reflection) => (
-                    <PostCard
-                      key={reflection.id}
-                      title={reflection.title}
-                      subtitle={reflection.subtitle}
-                      date={reflection.date}
-                      tags={reflection.tags}
-                      href={`/reflections/${reflection.slug}`}
-                    />
-                  ))
-                ) : (
-                  <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 border-dashed">
-                    <p className="text-gray-500 dark:text-gray-500 text-center text-sm">
-                      {section.year}년 회고록이 아직 없습니다
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      {yearSections.map((section) => (
+        <section key={section.year} className="pt-10">
+          <h2 className="font-mono text-sm text-muted pb-2 border-b border-line">
+            {section.year}
+            <span className="ml-2 text-muted/70">({section.posts.length})</span>
+          </h2>
+          <PostList>
+            {section.posts.map((post) => (
+              <PostCard
+                key={post.id}
+                title={post.title}
+                subtitle={post.subtitle}
+                date={post.date}
+                tags={post.tags}
+                href={post.href}
+              />
+            ))}
+          </PostList>
+        </section>
+      ))}
+    </PageShell>
   );
 }

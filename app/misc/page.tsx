@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
+import { PageShell, PageHeader } from '@/components/page-shell';
 import { MiscBubble } from '@/components/misc-bubble';
 import { DateDivider } from '@/components/date-divider';
 import { LoadingSpinner } from '@/components/loading-spinner';
@@ -60,78 +59,42 @@ export default function MiscPage() {
   }, [currentPosts]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 transition-colors">
-      <Header />
+    <PageShell>
+      <PageHeader
+        label="misc"
+        title="Misc"
+        description="Random thoughts and casual conversations"
+        meta={`${miscPosts.length} posts`}
+      />
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <div className="space-y-8">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
-              Misc
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Random thoughts and casual conversations
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-500">
-              Showing {currentPosts.length} of {miscPosts.length} posts
-            </p>
+      {miscPosts.length > 0 ? (
+        <>
+          <div className="pt-2">
+            {groupedPosts.map((group) => (
+              <div key={group.date}>
+                <DateDivider date={group.date} />
+                <div className="space-y-2">
+                  {group.posts.map((post) => (
+                    <MiscBubble key={post.id} post={post} />
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
-          {miscPosts.length > 0 ? (
-            <>
-              <div className="mt-8">
-                {groupedPosts.map((group, groupIndex) => (
-                  <div key={group.date}>
-                    {groupIndex === 0 && <DateDivider date={group.date} />}
+          {isLoading && <LoadingSpinner />}
 
-                    <div className="space-y-2">
-                      {group.posts.map((post) => (
-                        <MiscBubble
-                          key={post.id}
-                          post={post}
-                        />
-                      ))}
-                    </div>
+          {hasMore && !isLoading && <div ref={observerTarget} className="h-16" />}
 
-                    {groupIndex < groupedPosts.length - 1 && (
-                      <DateDivider date={groupedPosts[groupIndex + 1].date} />
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Loading indicator */}
-              {isLoading && <LoadingSpinner />}
-
-              {/* Intersection observer target */}
-              {hasMore && !isLoading && (
-                <div ref={observerTarget} className="h-20 flex items-center justify-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-500">
-                    Scroll for more...
-                  </p>
-                </div>
-              )}
-
-              {/* End of posts message */}
-              {!hasMore && currentPosts.length > 0 && (
-                <div className="py-8 text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-500">
-                    모든 포스트를 불러왔습니다
-                  </p>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="p-6 rounded-lg border border-gray-200 dark:border-gray-800 border-dashed">
-              <p className="text-gray-500 dark:text-gray-500 text-center">
-                아직 잡담이 없습니다. 첫 생각을 공유해보세요!
-              </p>
-            </div>
+          {!hasMore && (
+            <p className="pt-8 text-center font-mono text-xs text-muted">
+              — end of list ({miscPosts.length}) —
+            </p>
           )}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+        </>
+      ) : (
+        <p className="py-16 text-center font-mono text-sm text-muted">아직 잡담이 없습니다.</p>
+      )}
+    </PageShell>
   );
 }

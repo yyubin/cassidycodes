@@ -5,23 +5,27 @@ import { ScrollProgressBar } from './scroll-progress-bar';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur-md">
       <ScrollProgressBar />
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent bg-[length:200%_auto] hover:animate-gradient">
-            cassidycodes
-          </Link>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="font-mono text-sm font-semibold tracking-tight text-fg hover:text-accent transition-colors shrink-0"
+        >
+          <span className="text-accent">~/</span>cassidycodes
+        </Link>
 
-          <div className="hidden md:block">
+        <div className="flex items-center gap-6">
+          <div className="hidden sm:block">
             <Navigation />
           </div>
-
           <ThemeToggle />
         </div>
+      </div>
 
-        {/* Mobile Navigation */}
-        <div className="md:hidden mt-4">
+      {/* Mobile navigation */}
+      <div className="sm:hidden border-t border-line">
+        <div className="px-4 h-10 flex items-center">
           <Navigation />
         </div>
       </div>

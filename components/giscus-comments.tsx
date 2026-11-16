@@ -47,7 +47,7 @@ export function GiscusComments() {
   }, [resolvedTheme]);
 
   return (
-    <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+    <div className="mt-12">
       <div ref={ref} />
     </div>
   );

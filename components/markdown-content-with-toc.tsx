@@ -12,14 +12,12 @@ export function MarkdownContentWithTOC({ content }: MarkdownContentWithTOCProps)
   const headings = extractHeadings(content);
 
   return (
-    <div className="relative flex gap-8">
-      {/* Main Content */}
-      <div className="flex-1 min-w-0">
+    <div className="relative flex gap-12">
+      <div className="flex-1 min-w-0 max-w-3xl">
         <MarkdownContent content={content} />
       </div>
 
-      {/* Table of Contents - Right Side */}
-      <aside className="hidden xl:block w-64 flex-shrink-0">
+      <aside className="hidden lg:block w-56 flex-shrink-0">
         <TableOfContents headings={headings} />
       </aside>
     </div>

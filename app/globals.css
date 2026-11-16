@@ -2,40 +2,73 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+/* ── Design tokens ───────────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #ffffff;
+  --fg: #18181b;
+  --muted: #71717a;
+  --subtle: #f4f4f5;
+  --line: #e4e4e7;
+  --accent: #2563eb;
+  --code-bg: #fafafa;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  --bg: #0b0b0c;
+  --fg: #e4e4e7;
+  --muted: #8b8b93;
+  --subtle: #18181b;
+  --line: #27272a;
+  --accent: #60a5fa;
+  --code-bg: #111113;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #0b0b0c;
+    --fg: #e4e4e7;
+    --muted: #8b8b93;
+    --subtle: #18181b;
+    --line: #27272a;
+    --accent: #60a5fa;
+    --code-bg: #111113;
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-code: var(--code-bg);
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html {
+  scroll-padding-top: 5rem;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--fg);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -44,18 +77,22 @@ body {
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s ease-out;
+  animation: fade-in 0.2s ease-out;
+}
+
+/* 헤딩 앵커 링크: 본문 색 유지 */
+.anchor-link {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* ── Mermaid dark mode ───────────────────────────────────────────── */
 
-/* 엣지 라벨 박스 배경 */
 .dark .mermaid-container .edgeLabel rect {
   fill: #1e293b !important;
   stroke: none !important;
 }
 
-/* SVG 루트 배경 (theme: dark 의 #1f2020 제거) */
 .dark .mermaid-container svg {
   background: transparent !important;
 }

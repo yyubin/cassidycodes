@@ -22,7 +22,6 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       { rootMargin: '-80px 0px -80% 0px' }
     );
 
-    // Observe all headings
     headings.forEach(({ id }) => {
       const element = document.getElementById(id);
       if (element) {
@@ -37,9 +36,9 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
-      const yOffset = -80;
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      const y = element.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top: y, behavior: 'smooth' });
+      history.replaceState(null, '', `#${id}`);
     }
   };
 
@@ -47,33 +46,32 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     return null;
   }
 
+  const minLevel = Math.min(...headings.map((h) => h.level));
+
   return (
-    <nav className="hidden xl:block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
-      <div className="space-y-2">
-        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
-          목차
-        </p>
-        <ul className="space-y-2 text-sm">
-          {headings.map((heading) => (
-            <li
-              key={heading.id}
-              style={{ paddingLeft: `${(heading.level - 1) * 0.75}rem` }}
-            >
+    <nav className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto" aria-label="Table of contents">
+      <p className="font-mono text-xs text-muted mb-3">on this page</p>
+      <ul className="border-l border-line text-[13px]">
+        {headings.map((heading) => {
+          const isActive = activeId === heading.id;
+          return (
+            <li key={heading.id}>
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                className={`block py-1 transition-colors hover:text-cyan-600 dark:hover:text-cyan-400 ${
-                  activeId === heading.id
-                    ? 'text-cyan-600 dark:text-cyan-400 font-medium'
-                    : 'text-gray-600 dark:text-gray-400'
+                style={{ paddingLeft: `${0.75 + (heading.level - minLevel) * 0.75}rem` }}
+                className={`block py-1 -ml-px border-l transition-colors leading-snug ${
+                  isActive
+                    ? 'border-accent text-fg'
+                    : 'border-transparent text-muted hover:text-fg'
                 }`}
               >
-                {heading.text}
+                {heading.text.replace(/[`*_]/g, "")}
               </a>
             </li>
-          ))}
-        </ul>
-      </div>
+          );
+        })}
+      </ul>
     </nav>
   );
 }

@@ -21,297 +21,299 @@ interface MarkdownContentProps {
   content: string;
 }
 
+const CODE_FONT = 'var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace';
+
+function CodeFrame({ language, children }: { language: string; children: React.ReactNode }) {
+  return (
+    <div className="my-6 rounded-md border border-line bg-code overflow-hidden">
+      <div className="px-4 py-1.5 border-b border-line font-mono text-[11px] text-muted select-none">
+        {language}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 export function MarkdownContent({ content }: MarkdownContentProps) {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   return (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[
-        rehypeRaw,
-        rehypeSlug,
-        [
-          rehypeAutolinkHeadings,
-          {
-            behavior: "wrap",
-            properties: { className: ["anchor-link"] },
-          },
-        ],
-        rehypeKatex,
-      ]}
-      components={{
-        // 코드 블록 하이라이팅
-        code({
-          className,
-          children,
-          ...props
-        }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) {
-          const match = /language-(\w+)/.exec(className || "");
+    <div className="text-[15.5px] sm:text-base">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[
+          rehypeRaw,
+          rehypeSlug,
+          [
+            rehypeAutolinkHeadings,
+            {
+              behavior: "wrap",
+              properties: { className: ["anchor-link"] },
+            },
+          ],
+          rehypeKatex,
+        ]}
+        components={{
+          code({
+            className,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) {
+            const match = /language-(\w+)/.exec(className || "");
 
-          if (match) {
-            if (match[1] === "mermaid") {
+            if (match) {
+              const language = match[1];
+              const code = String(children).replace(/\n$/, "");
+
+              if (language === "mermaid") {
+                return <MermaidDiagram chart={code} />;
+              }
+              if (language === "plain") {
+                return (
+                  <CodeFrame language="text">
+                    <pre
+                      className="p-4 overflow-x-auto text-sm leading-relaxed text-fg"
+                      style={{ fontFamily: CODE_FONT }}>
+                      <code>{code}</code>
+                    </pre>
+                  </CodeFrame>
+                );
+              }
               return (
-                <MermaidDiagram chart={String(children).replace(/\n$/, "")} />
+                <CodeFrame language={language}>
+                  <SyntaxHighlighter
+                    style={(resolvedTheme === "dark" ? oneDark : oneLight) as any}
+                    language={language}
+                    PreTag="div"
+                    customStyle={{
+                      margin: 0,
+                      padding: "1rem",
+                      borderRadius: 0,
+                      background: "transparent",
+                      fontSize: "0.85rem",
+                      lineHeight: 1.65,
+                      fontFamily: CODE_FONT,
+                    }}
+                    codeTagProps={{
+                      style: { background: "transparent", fontFamily: CODE_FONT },
+                    }}
+                    {...props}>
+                    {code}
+                  </SyntaxHighlighter>
+                </CodeFrame>
               );
             }
-            if (match[1] === "plain") {
-              return (
-                <pre
-                  style={{
-                    margin: "1.5rem 0",
-                    borderRadius: "0.5rem",
-                    fontSize: "0.875rem",
-                    padding: "1rem",
-                    overflowX: "auto",
-                    fontFamily: '"JetBrains Mono", monospace',
-                    lineHeight: "1.6",
-                  }}
-                  className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-                  <code>{String(children).replace(/\n$/, "")}</code>
-                </pre>
-              );
-            }
+
             return (
-              <SyntaxHighlighter
-                style={(theme === "dark" ? oneDark : oneLight) as any}
-                language={match[1]}
-                PreTag="div"
-                customStyle={{
-                  margin: "1.5rem 0",
-                  borderRadius: "0.5rem",
-                  fontSize: "0.875rem",
-                  fontFamily: '"JetBrains Mono", monospace',
-                }}
-                {...props}>
-                {String(children).replace(/\n$/, "")}
-              </SyntaxHighlighter>
-            );
-          }
-
-          return (
-            <code
-              className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-sm font-mono"
-              {...props}>
-              {children}
-            </code>
-          );
-        },
-
-        a({
-          href,
-          children,
-          ...props
-        }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-          const isExternal = href?.startsWith("http");
-          return (
-            <a
-              href={href}
-              target={isExternal ? "_blank" : undefined}
-              rel={isExternal ? "noopener noreferrer" : undefined}
-              className="text-cyan-600 dark:text-cyan-400 hover:underline font-medium"
-              {...props}>
-              {children}
-              {isExternal && <span className="ml-1 text-xs">↗</span>}
-            </a>
-          );
-        },
-
-        h1({ children, ...props }) {
-          return (
-            <h1
-              className="text-3xl md:text-4xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100 group"
-              {...props}>
-              {children}
-            </h1>
-          );
-        },
-
-        h2({ children, ...props }) {
-          return (
-            <h2
-              className="text-2xl md:text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100 group"
-              {...props}>
-              {children}
-            </h2>
-          );
-        },
-
-        h3({ children, ...props }) {
-          return (
-            <h3
-              className="text-xl md:text-2xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100 group"
-              {...props}>
-              {children}
-            </h3>
-          );
-        },
-
-        h4({ children, ...props }) {
-          return (
-            <h4
-              className="text-lg md:text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-gray-100"
-              {...props}>
-              {children}
-            </h4>
-          );
-        },
-
-        blockquote({ children, ...props }) {
-          return (
-            <blockquote
-              className="border-l-4 border-cyan-500 dark:border-cyan-400 pl-4 py-2 my-4 italic text-gray-700 dark:text-gray-300 bg-cyan-50 dark:bg-cyan-950/30 rounded-r"
-              {...props}>
-              {children}
-            </blockquote>
-          );
-        },
-
-        table({ children, ...props }) {
-          return (
-            <div className="overflow-x-auto my-6">
-              <table
-                className="min-w-full border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden"
+              <code
+                className="px-1.5 py-0.5 rounded bg-subtle border border-line text-[0.85em] font-mono text-fg"
                 {...props}>
                 {children}
-              </table>
-            </div>
-          );
-        },
+              </code>
+            );
+          },
 
-        thead({ children, ...props }) {
-          return (
-            <thead className="bg-gray-100 dark:bg-gray-800" {...props}>
-              {children}
-            </thead>
-          );
-        },
+          a({
+            href,
+            children,
+            ...props
+          }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+            const isExternal = href?.startsWith("http");
+            return (
+              <a
+                href={href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                className="text-accent underline decoration-accent/30 underline-offset-[3px] hover:decoration-accent transition-colors"
+                {...props}>
+                {children}
+                {isExternal && <span className="ml-0.5 text-[0.75em] no-underline">↗</span>}
+              </a>
+            );
+          },
 
-        th({ children, ...props }) {
-          return (
-            <th
-              className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-700"
-              {...props}>
-              {children}
-            </th>
-          );
-        },
+          h1({ children, ...props }) {
+            return (
+              <h1
+                className="text-2xl sm:text-3xl font-semibold tracking-tight mt-12 mb-4 text-fg"
+                {...props}>
+                {children}
+              </h1>
+            );
+          },
 
-        td({ children, ...props }) {
-          return (
-            <td
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-800"
-              {...props}>
-              {children}
-            </td>
-          );
-        },
+          h2({ children, ...props }) {
+            return (
+              <h2
+                className="text-xl sm:text-2xl font-semibold tracking-tight mt-12 mb-4 pb-2 border-b border-line text-fg"
+                {...props}>
+                {children}
+              </h2>
+            );
+          },
 
-        ul({ children, ...props }) {
-          return (
-            <ul
-              className="list-disc list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
-              {...props}>
-              {children}
-            </ul>
-          );
-        },
+          h3({ children, ...props }) {
+            return (
+              <h3
+                className="text-lg sm:text-xl font-semibold tracking-tight mt-8 mb-3 text-fg"
+                {...props}>
+                {children}
+              </h3>
+            );
+          },
 
-        ol({ children, ...props }) {
-          return (
-            <ol
-              className="list-decimal list-outside my-4 ml-6 space-y-2 text-gray-700 dark:text-gray-300"
-              {...props}>
-              {children}
-            </ol>
-          );
-        },
+          h4({ children, ...props }) {
+            return (
+              <h4 className="text-base font-semibold mt-6 mb-2 text-fg" {...props}>
+                {children}
+              </h4>
+            );
+          },
 
-        li({ children, ...props }) {
-          return (
-            <li
-              className="ml-2 pl-2 text-gray-700 dark:text-gray-300 leading-relaxed"
-              {...props}>
-              {children}
-            </li>
-          );
-        },
+          blockquote({ children, ...props }) {
+            return (
+              <blockquote
+                className="my-6 pl-4 border-l-2 border-accent text-muted [&>p]:text-muted"
+                {...props}>
+                {children}
+              </blockquote>
+            );
+          },
 
-        img({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
-          return (
-            <span className="block my-6">
-              <img
-                src={src}
-                alt={alt}
-                className="rounded-lg max-w-full h-auto mx-auto shadow-lg"
-                {...props}
-              />
-              {alt && (
-                <span className="block text-center text-sm text-gray-500 dark:text-gray-500 mt-2">
-                  {alt}
-                </span>
-              )}
-            </span>
-          );
-        },
+          table({ children, ...props }) {
+            return (
+              <div className="my-6 overflow-x-auto border border-line rounded-md">
+                <table className="min-w-full text-sm border-collapse" {...props}>
+                  {children}
+                </table>
+              </div>
+            );
+          },
 
-        hr(props) {
-          return (
-            <hr
-              className="my-8 border-gray-300 dark:border-gray-700"
-              {...props}
-            />
-          );
-        },
+          thead({ children, ...props }) {
+            return (
+              <thead className="bg-subtle" {...props}>
+                {children}
+              </thead>
+            );
+          },
 
-        details({ children, ...props }) {
-          return (
-            <details
-              className="my-4 p-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50"
-              {...props}>
-              {children}
-            </details>
-          );
-        },
+          th({ children, ...props }) {
+            return (
+              <th
+                className="px-4 py-2 text-left font-semibold text-fg border-b border-line whitespace-nowrap"
+                {...props}>
+                {children}
+              </th>
+            );
+          },
 
-        summary({ children, ...props }) {
-          return (
-            <summary
-              className="cursor-pointer font-semibold text-gray-900 dark:text-gray-100 hover:text-cyan-600 dark:hover:text-cyan-400 select-none"
-              {...props}>
-              {children}
-            </summary>
-          );
-        },
+          td({ children, ...props }) {
+            return (
+              <td
+                className="px-4 py-2 text-fg/90 border-b border-line align-top"
+                {...props}>
+                {children}
+              </td>
+            );
+          },
 
-        p({ children, ...props }) {
-          return (
-            <p
-              className="my-4 text-gray-700 dark:text-gray-300 leading-relaxed"
-              {...props}>
-              {children}
-            </p>
-          );
-        },
+          ul({ children, ...props }) {
+            return (
+              <ul
+                className="list-disc list-outside my-4 pl-6 space-y-1.5 marker:text-muted"
+                {...props}>
+                {children}
+              </ul>
+            );
+          },
 
-        strong({ children, ...props }) {
-          return (
-            <strong
-              className="font-bold text-gray-900 dark:text-gray-100"
-              {...props}>
-              {children}
-            </strong>
-          );
-        },
+          ol({ children, ...props }) {
+            return (
+              <ol
+                className="list-decimal list-outside my-4 pl-6 space-y-1.5 marker:text-muted marker:font-mono marker:text-sm"
+                {...props}>
+                {children}
+              </ol>
+            );
+          },
 
-        em({ children, ...props }) {
-          return (
-            <em className="italic" {...props}>
-              {children}
-            </em>
-          );
-        },
-      }}>
-      {content}
-    </ReactMarkdown>
+          li({ children, ...props }) {
+            return (
+              <li className="pl-1 text-fg/90 leading-7" {...props}>
+                {children}
+              </li>
+            );
+          },
+
+          img({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+            return (
+              <span className="block my-8">
+                <img
+                  src={src}
+                  alt={alt}
+                  className="max-w-full h-auto mx-auto rounded-md border border-line"
+                  {...props}
+                />
+                {alt && (
+                  <span className="block text-center font-mono text-xs text-muted mt-2">
+                    {alt}
+                  </span>
+                )}
+              </span>
+            );
+          },
+
+          hr(props) {
+            return <hr className="my-10 border-line" {...props} />;
+          },
+
+          details({ children, ...props }) {
+            return (
+              <details
+                className="my-4 px-4 py-3 border border-line rounded-md bg-subtle/50"
+                {...props}>
+                {children}
+              </details>
+            );
+          },
+
+          summary({ children, ...props }) {
+            return (
+              <summary
+                className="cursor-pointer font-mono text-sm text-fg hover:text-accent select-none"
+                {...props}>
+                {children}
+              </summary>
+            );
+          },
+
+          p({ children, ...props }) {
+            return (
+              <p className="my-4 text-fg/90 leading-7" {...props}>
+                {children}
+              </p>
+            );
+          },
+
+          strong({ children, ...props }) {
+            return (
+              <strong className="font-semibold text-fg" {...props}>
+                {children}
+              </strong>
+            );
+          },
+
+          em({ children, ...props }) {
+            return (
+              <em className="italic" {...props}>
+                {children}
+              </em>
+            );
+          },
+        }}>
+        {content}
+      </ReactMarkdown>
+    </div>
   );
 }

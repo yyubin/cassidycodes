@@ -12,57 +12,34 @@ export function MiscBubble({ post, maxLength = 150 }: MiscBubbleProps) {
   const { content, date, author } = post;
   const [isExpanded, setIsExpanded] = useState(false);
   const isLong = content.length > maxLength;
-  const displayContent = isLong && !isExpanded
-    ? content.slice(0, maxLength) + '...'
-    : content;
+  const displayContent = isLong && !isExpanded ? content.slice(0, maxLength) + '…' : content;
 
   const isMe = author === 'Me';
-
-  const bubbleAlignment = isMe ? 'justify-end' : 'justify-start';
-  const bubbleBgColor = isMe
-    ? 'bg-cyan-600 dark:bg-cyan-500 text-white'
-    : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100';
-  const bubbleBorderRadius = isMe
-    ? 'rounded-2xl rounded-tr-sm'
-    : 'rounded-2xl rounded-tl-sm';
-  const timeAlignment = isMe ? 'mr-3 text-right' : 'ml-3 text-left';
+  const time = /T(\d{2}:\d{2})/.exec(date)?.[1];
 
   return (
-    <div className={`flex ${bubbleAlignment} mb-4 animate-fade-in`}>
-      <div className="max-w-[85%] md:max-w-[70%]">
+    <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-3 animate-fade-in`}>
+      <div className={`max-w-[85%] md:max-w-[70%] ${isMe ? 'text-right' : 'text-left'}`}>
         <div
           onClick={() => isLong && setIsExpanded(!isExpanded)}
-          className={`
-            relative px-5 py-3
-            ${bubbleBgColor}
-            ${bubbleBorderRadius}
-            ${isLong ? 'cursor-pointer' : ''}
-            transition-all duration-200
-            shadow-sm hover:shadow-md
-          `}
+          className={`inline-block text-left px-4 py-2.5 rounded-md text-[15px] leading-relaxed ${
+            isMe ? 'bg-fg text-bg' : 'bg-subtle text-fg border border-line'
+          } ${isLong ? 'cursor-pointer' : ''}`}
         >
-          <p className="whitespace-pre-wrap break-words">
-            {displayContent}
-          </p>
+          <p className="whitespace-pre-wrap break-words">{displayContent}</p>
 
           {isLong && (
-            <div className={`mt-2 text-xs font-medium ${isMe ? 'text-cyan-100' : 'text-blue-600 dark:text-blue-400'}`}>
-              {isExpanded ? '접기 ▲' : '더보기 ▼'}
-            </div>
+            <span className="block mt-1.5 font-mono text-[11px] opacity-60">
+              {isExpanded ? '[ collapse ]' : '[ expand ]'}
+            </span>
           )}
         </div>
 
-        <div className={`mt-1 ${timeAlignment}`}>
-          <time className="text-xs text-gray-500 dark:text-gray-500">
-            {new Date(date).toLocaleDateString('ko-KR', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+        {time && (
+          <time dateTime={date} className="block mt-1 px-1 font-mono text-[11px] text-muted tabular-nums">
+            {time}
           </time>
-        </div>
+        )}
       </div>
     </div>
   );

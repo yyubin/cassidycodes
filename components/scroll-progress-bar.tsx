@@ -5,30 +5,20 @@ import { useState, useEffect } from 'react';
 export function ScrollProgressBar() {
   const [width, setWidth] = useState(0);
 
-  const handleScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-    if (scrollHeight === clientHeight) {
-      setWidth(0);
-      return;
-    }
-
-    const windowHeight = scrollHeight - clientHeight;
-    const scrolled = (scrollTop / windowHeight) * 100;
-    setWidth(scrolled);
-  };
-
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, true);
-    return () => window.removeEventListener('scroll', handleScroll, true);
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      const scrollable = scrollHeight - clientHeight;
+      setWidth(scrollable > 0 ? (scrollTop / scrollable) * 100 : 0);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="h-1 w-full bg-transparent fixed top-0 left-0 z-50">
-      <div
-        className="h-1 bg-cyan-600 dark:bg-cyan-400"
-        style={{ width: `${width}%` }}
-      />
+    <div className="h-[2px] w-full fixed top-0 left-0 z-50 pointer-events-none">
+      <div className="h-full bg-accent" style={{ width: `${width}%` }} />
     </div>
   );
 }

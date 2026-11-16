@@ -66,7 +66,7 @@ export function MermaidDiagram({ chart }: MermaidDiagramProps) {
   }, [chart, resolvedTheme]);
 
   return (
-    <div className="mermaid-container overflow-x-auto">
+    <div className="mermaid-container my-6 p-4 overflow-x-auto rounded-md border border-line">
       <div
         ref={ref}
         className="flex justify-center"
